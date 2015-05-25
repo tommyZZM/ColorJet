@@ -191,6 +191,19 @@ declare module alcedo {
     }
 }
 /**
+ * Created by tommyZZM on 2015/5/16.
+ */
+declare module alcedo {
+    class AppSubCore extends EventDispatcher {
+        constructor();
+        startUp(...anyarg: any[]): void;
+        shutDown(...anyarg: any[]): void;
+        protected addCmdHandler(notify: string, callback: Function): void;
+        protected removeCmdHandler(notify: string, callback: Function): void;
+        protected dispatchDemand(event: string, courier?: any): void;
+    }
+}
+/**
  * Created by tommyZZM on 2015/4/8.
  */
 declare module alcedo {
@@ -319,17 +332,21 @@ declare module alcedo {
     }
 }
 /**
- * Created by tommyZZM on 2015/5/16.
+ * Created by tommyZZM on 2015/4/3.
  */
 declare module alcedo {
-    class AppSubCore extends EventDispatcher {
-        constructor();
-        startUp(...anyarg: any[]): void;
-        shutDown(...anyarg: any[]): void;
-        protected addCmdHandler(notify: string, callback: Function): void;
-        protected removeCmdHandler(notify: string, callback: Function): void;
-        protected dispatchDemand(event: string, courier?: any): void;
+    class Event extends AppObject {
+        protected _type: string;
+        protected _courier: any;
+        constructor(_type: string, courier?: Array<any>);
+        type: string;
+        courier: string;
     }
+}
+interface Math {
+    add(...nums: any[]): any;
+    randomFrom(num1: number, num2: number): any;
+    probabilityPool(pool: number[]): any;
 }
 /**
  * Created by tommyZZM on 2015/4/8.
@@ -363,32 +380,6 @@ declare module alcedo {
             eachChilder(fn: (child) => {}): any;
         }
     }
-}
-/**
- * Created by tommyZZM on 2015/4/3.
- */
-declare module alcedo {
-    class AppCycler extends AppSubCore {
-        constructor();
-        protected cmdStartup(...courier: any[]): void;
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/3.
- */
-declare module alcedo {
-    class Event extends AppObject {
-        protected _type: string;
-        protected _courier: any;
-        constructor(_type: string, courier?: Array<any>);
-        type: string;
-        courier: string;
-    }
-}
-interface Math {
-    add(...nums: any[]): any;
-    randomFrom(num1: number, num2: number): any;
-    probabilityPool(pool: number[]): any;
 }
 /**
  * Created by tommyZZM on 2015/4/8.
@@ -472,27 +463,6 @@ interface Array<T> {
  * Created by tommyZZM on 2015/4/4.
  */
 declare module alcedo {
-    class AppLauncher {
-        static START_UP: string;
-        private _launched;
-        constructor(debug: boolean);
-        launch(app: AppCycler, courier?: any): void;
-        private static _instance;
-        static instance(debug?: boolean): AppLauncher;
-    }
-    function launch(app: AppCycler, debug?: boolean, courier?: any): void;
-}
-declare function trace(...msg: any[]): void;
-declare function warn(...msg: any[]): void;
-declare function info(...msg: any[]): void;
-declare function error(...msg: any[]): void;
-declare module alcedo {
-    function debuginit(): void;
-}
-/**
- * Created by tommyZZM on 2015/4/4.
- */
-declare module alcedo {
     class FacadeEvent extends Event {
         static UNIQUE: string;
         private _core;
@@ -569,6 +539,51 @@ declare module alcedo {
     function addDemandListener(core: any, type: string, callback: Function, thisObject: any, priority?: number): boolean;
 }
 /**
+ * Created by tommyZZM on 2015/4/3.
+ */
+declare module alcedo {
+    class AppCycler extends AppSubCore {
+        constructor();
+        protected cmdStartup(...courier: any[]): void;
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/4.
+ */
+declare module alcedo {
+    class AppNotifyable {
+        static registNotify(notifymap: Dict, name: string, callback: Function, thisObject: any, param?: Array<any>, priority?: number): boolean;
+        static unregistNotify(notifymap: Dict, name: string, callback: Function, thisObject: any): void;
+        static notify(notifymap: Dict, name: string, param?: Array<any>): boolean;
+        static notifyArray(arr: Array<{
+            callback: Function;
+            thisObject: any;
+            param: Array<any>;
+        }>, param?: Array<any>): void;
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/4.
+ */
+declare module alcedo {
+    class AppLauncher {
+        static START_UP: string;
+        private _launched;
+        constructor(debug: boolean);
+        launch(app: AppCycler, courier?: any): void;
+        private static _instance;
+        static instance(debug?: boolean): AppLauncher;
+    }
+    function launch(app: AppCycler, debug?: boolean, courier?: any): void;
+}
+declare function trace(...msg: any[]): void;
+declare function warn(...msg: any[]): void;
+declare function info(...msg: any[]): void;
+declare function error(...msg: any[]): void;
+declare module alcedo {
+    function debuginit(): void;
+}
+/**
  * Created by tommyZZM on 2015/4/6.
  */
 declare module alcedo {
@@ -598,193 +613,6 @@ declare module alcedo {
          * @returns {number} cos值
          */
         static cos(value: number): number;
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/4.
- */
-declare module alcedo {
-    class AppNotifyable {
-        static registNotify(notifymap: Dict, name: string, callback: Function, thisObject: any, param?: Array<any>, priority?: number): boolean;
-        static unregistNotify(notifymap: Dict, name: string, callback: Function, thisObject: any): void;
-        static notify(notifymap: Dict, name: string, param?: Array<any>): boolean;
-        static notifyArray(arr: Array<{
-            callback: Function;
-            thisObject: any;
-            param: Array<any>;
-        }>, param?: Array<any>): void;
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/22.
- */
-declare module alcedo {
-    module canvas {
-        class MovieClip extends DisplayObject {
-            private _moveclipdata;
-            private _isPlaying;
-            private _frameRate;
-            private _playTimes;
-            constructor(movieclipdata: MovieClipData);
-            _draw(renderer: CanvasRenderer): void;
-            protected _onAdd(): void;
-            isInViewPort(): boolean;
-            /**
-             * MovieClip API
-             */
-            play(playtimes?: number): void;
-            stop(): void;
-            gotoAndPlay(frame: number | string, playTimes?: number): void;
-            gotoAndStop(frame: number | string): void;
-            private _playtotag;
-            playToAndStop(frame: number, playtimes?: number): void;
-            stopAt(frame: number): void;
-            private setPlayTimes(value);
-            private gotoFrame(index);
-            private selectFrame(index);
-            /**
-             * Movie interal
-             */
-            private _countdt;
-            private _passtime;
-            private _lasttime;
-            private _nextframeindex;
-            private _currframeindex;
-            private _totalframescount;
-            private _currframe;
-            private _frameRateControl(e);
-            private _updateCurrFrame();
-            private _playstate;
-            private _playstatetmp;
-            private setPlayState(value);
-        }
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/24.
- * 离子发射器
- */
-declare module alcedo {
-    module canvas {
-        class ParticleEmitter extends DisplayObject {
-            private _particlespool;
-            private _particles;
-            private _max;
-            private _particleClass;
-            private _currinitial;
-            private _initial;
-            private _mass;
-            private _spread;
-            private _massrandom;
-            private _rate;
-            private _raterandom;
-            /**
-             * @param initial
-             * @param opts
-             * @particleClass 粒子类
-             */
-            constructor(opts?: any);
-            _draw(renderer: any): void;
-            /**
-             * 创建一枚栗子
-             * @private
-             */
-            private _createOneParticle();
-            private _ParticleInit(paricle);
-            /**
-             * 更新栗子们,判断是否创建栗子
-             * @param e
-             * @private
-             */
-            private _shouldcreate;
-            private _updateParticles(e);
-            /**
-             * 更新一枚栗子
-             * @param partile
-             * @private
-             */
-            protected _updateOneParticle(partile: Particle): void;
-            /**
-             * 粒子行为控制
-             */
-            private _force;
-            applyForce(force: Vector2D): void;
-            initialdegree: number;
-            /**
-             * 发射器开关控制系统
-             * @private
-             */
-            protected _onAdd(): void;
-            play(): void;
-            stop(): void;
-            private _playstate;
-            private _playstatetmp;
-            private setPlayState(value);
-            dispose(): void;
-        }
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/8.
- */
-declare module alcedo {
-    module canvas {
-        class Vector2D implements Ixy {
-            x: number;
-            y: number;
-            private static _identity;
-            static identity(x?: number, y?: number): Vector2D;
-            constructor(x?: number, y?: number);
-            /** 加 **/
-            add(vector: Vector2D): Vector2D;
-            /** 减 **/
-            subtract(vector: Vector2D): Vector2D;
-            /** 乘 **/
-            multiply(vector: Vector2D): Vector2D;
-            /** 除 **/
-            divide(value: Vector2D | number): Vector2D;
-            /**
-             * 向量积
-             * @param vector
-             * @returns {alcedo.canvas.Vector2D}
-             */
-            /**
-             * 左手法向量
-             */
-            private _vectornormal;
-            normalize(): Vector2D;
-            /**
-             * 矢量对象长度
-             */
-            length: number;
-            unitlize(): Vector2D;
-            deg: number;
-            toNormalDeg(left: boolean): number;
-            toRad(): number;
-            /**
-             * 克隆矢量对象
-             */
-            clone(): Vector2D;
-            reset(x?: number, y?: number): Vector2D;
-            resetAs(vector: Vector2D): Vector2D;
-            resetToDeg(deg: number): void;
-            /**
-             * 从两个点创建适量对象
-             */
-            static createFromPoint(start: Point2D, end: Point2D): Vector2D;
-            /**
-             * 从一个角度创建向量
-             */
-            static createFromDeg(deg: number, length?: number): Vector2D;
-        }
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/6.
- */
-declare module alcedo {
-    module dom {
-        function log_code(code: number): string;
     }
 }
 /**
@@ -844,236 +672,6 @@ declare module alcedo {
     }
 }
 /**
- * Created by tommyZZM on 2015/4/25.
- */
-declare module alcedo {
-    module canvas {
-        class DisplayGraphic extends DisplayObject {
-            protected _fillcolour: string;
-            protected _linecolour: string;
-            _graphicfn: (context: CanvasRenderingContext2D | any) => void;
-            _draw(renderer: CanvasRenderer): void;
-            fillcolour: string;
-        }
-        module graphic {
-            class Circle extends DisplayGraphic {
-                private _radius;
-                constructor(r?: number, coulour?: string);
-                radius: number;
-            }
-            class Rectangle extends DisplayGraphic {
-                constructor(width?: number, height?: number, coulour?: string);
-            }
-        }
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/6.
- */
-declare module alcedo {
-    module dom {
-        class DomElement extends EventDispatcher {
-            private _node;
-            private _apid;
-            private _designedcss;
-            private _domEventnotify;
-            constructor(ele: HTMLElement);
-            private initevent();
-            /**
-             * Event
-             **/
-            /**
-             * Touch事件
-             **/
-            private emitTouchEvent(e, event);
-            private ontouchbegin(e);
-            private ontouchmove(e);
-            private ontouchend(e);
-            private ontouchtap(e);
-            private _onmouse(e);
-            private _onmodified(e);
-            private _csstransitionSleep;
-            private _oncsstransitionend(e);
-            /**
-             * CSS style
-             */
-            hasClass(className: any): boolean;
-            addClass(className: any): void;
-            removeClass(className: any): void;
-            styleClass: string[];
-            css(cssprops: any): DomElement;
-            abscss(): any;
-            private getcsspropvalue(name);
-            styleWidth: string;
-            styleHeight: string;
-            private _display;
-            show(): DomElement;
-            hide(): DomElement;
-            private _lastindex;
-            index: string | number;
-            css_transform_to(cssprops: any, transition?: number): DomElement;
-            private _rotation;
-            css_transform_rotate(angle: number, transition?: number): DomElement;
-            css_transform_scale(scale: number, transition?: number): DomElement;
-            css_transform_translate(x: number, y: number, transition?: number): DomElement;
-            private _lasttransition;
-            css_transition: number;
-            /**
-             * Html Document Object Model
-             */
-            appendChild(ele: DomElement): DomElement;
-            prependChild(ele: DomElement): DomElement;
-            insertBefore(ele: DomElement): DomElement;
-            removeChild(ele: DomElement): DomElement;
-            parent(): DomElement;
-            find(selector: string): DomElement[];
-            innerContent(anything: string): void;
-            /**
-             * 读取或更改一个自定义属性
-             */
-            attr(key: any, value?: string): any;
-            data(key: any, value?: string): any;
-            /**
-             * 设置ID
-             * @param id
-             */
-            id: string;
-            /**
-             * 对于该DomElement元素的唯一ID
-             * @returns {number}
-             */
-            apid: number;
-            node: HTMLElement;
-            tagname: string;
-        }
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/11.
- */
-declare module alcedo {
-    module canvas {
-        class Camera2D extends AppSubCore {
-            private _stage;
-            private _position;
-            private _focal;
-            private _yaw;
-            private _buffer;
-            private _vieworigin;
-            private _viewfinder;
-            private _viewsafe;
-            constructor(stage: Stage, buffer?: number);
-            x: number;
-            y: number;
-            focal: number;
-            yawX: number;
-            yawY: number;
-            yaw: number;
-            zoomTo(x: number, y: number, focal?: number, yawx?: number, yawy?: number): void;
-            private _updateView();
-            viewfinder(): Rectangle;
-            viewsafe(): Rectangle;
-        }
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/8.
- */
-declare module alcedo {
-    module canvas {
-        class Stage extends DisplatObjectContainer {
-            static ENTER_FRAME: string;
-            static ENTER_MILLSECOND10: string;
-            static ENTER_SECOND: string;
-            static RESIZED: string;
-            static RESIZE: string;
-            private _stageWidth;
-            stageWidth: number;
-            private _stageHeight;
-            stageHeight: number;
-            private _maincontext;
-            private _touchcontext;
-            _options: any;
-            private _orientchanged;
-            private _ticker;
-            private _camera;
-            private _enterframemap;
-            constructor(canvas: dom.DomElement, width?: number, height?: number, opts?: any);
-            width: number;
-            height: number;
-            setStageWidth(width: number): void;
-            setStageHeight(height: number): void;
-            private initcomponent();
-            private initcontext();
-            render(renderer: CanvasRenderer): void;
-            private _startTime;
-            private _lastTime;
-            private _nowTime();
-            /**
-             * 分发EnterFrame消息
-             * @param renderer
-             * @private
-             */
-            private _distapchEnterFrame(renderer);
-            onenterframe(callback: any, thisOBject: any): void;
-            container: dom.DomElement;
-            /**
-             * 获得Canvas
-             * @returns {alcedo.dom.DomElement}
-             */
-            canvas: dom.DomElement;
-            /**
-             * 获得夹层
-             * @returns {alcedo.dom.DomElement}
-             */
-            gasket: dom.DomElement;
-            /**
-             * 获得UI层
-             * @returns {alcedo.dom.DomElement}
-             */
-            canvasui: dom.DomElement;
-            options: any;
-            resizecontext(): void;
-            orientchanged: boolean;
-            viewPort: Rectangle;
-            camera: Camera2D;
-            _transform(): void;
-            isInViewPort(): boolean;
-            addChild(child: DisplayObject): void;
-        }
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/25.
- */
-declare module alcedo {
-    module canvas {
-        interface Ixy {
-            x: any;
-            y: any;
-        }
-    }
-}
-/**
- * Created by tommyZZM on 2015/4/6.
- */
-declare module alcedo {
-    module dom {
-        function width(): number;
-        function height(): number;
-        function w2h(): number;
-        var ua: any;
-        function device(): DeviceType;
-        enum DeviceType {
-            Android = 1,
-            IOS = 2,
-            WinPhone = 3,
-            PC = 0,
-            Other = -1,
-        }
-    }
-}
-/**
  * Created by tommyZZM on 2015/4/9.
  */
 declare module alcedo {
@@ -1103,6 +701,61 @@ declare module alcedo {
             x: number;
             y: number;
             identifier: number;
+        }
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/8.
+ */
+declare module alcedo {
+    module canvas {
+        class Vector2D implements Ixy {
+            x: number;
+            y: number;
+            private static _identity;
+            static identity(x?: number, y?: number): Vector2D;
+            constructor(x?: number, y?: number);
+            /** 加 **/
+            add(vector: Vector2D): Vector2D;
+            /** 减 **/
+            subtract(vector: Vector2D): Vector2D;
+            /** 乘 **/
+            multiply(vector: Vector2D): Vector2D;
+            /** 除 **/
+            divide(value: Vector2D | number): Vector2D;
+            /**
+             * 向量积
+             * @param vector
+             * @returns {alcedo.canvas.Vector2D}
+             */
+            /**
+             * 左手法向量
+             */
+            private _vectornormal;
+            normalize(): Vector2D;
+            /**
+             * 矢量对象长度
+             */
+            length: number;
+            unitlize(): Vector2D;
+            deg: number;
+            toNormalDeg(left: boolean): number;
+            toRad(): number;
+            /**
+             * 克隆矢量对象
+             */
+            clone(): Vector2D;
+            reset(x?: number, y?: number): Vector2D;
+            resetAs(vector: Vector2D): Vector2D;
+            resetToDeg(deg: number): void;
+            /**
+             * 从两个点创建适量对象
+             */
+            static createFromPoint(start: Point2D, end: Point2D): Vector2D;
+            /**
+             * 从一个角度创建向量
+             */
+            static createFromDeg(deg: number, length?: number): Vector2D;
         }
     }
 }
@@ -1168,6 +821,87 @@ declare module alcedo {
              * 静态方法
              */
             static rectangleFromFourPoint(p1: Point2D, p2: Point2D, p3: Point2D, p4: Point2D, saveRectt?: Rectangle): Rectangle;
+        }
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/6.
+ */
+declare module alcedo {
+    module dom {
+        class DomElement extends EventDispatcher {
+            private _node;
+            private _apid;
+            private _designedcss;
+            private _domEventnotify;
+            constructor(ele: HTMLElement);
+            private initevent();
+            /**
+             * Event
+             **/
+            /**
+             * Touch事件
+             **/
+            private emitTouchEvent(e, event);
+            private ontouchbegin(e);
+            private ontouchmove(e);
+            private ontouchend(e);
+            private ontouchtap(e);
+            private _onmouse(e);
+            private _onmodified(e);
+            private _csstransitionSleep;
+            private _oncsstransitionend(e);
+            /**
+             * CSS style
+             */
+            hasClass(className: any): boolean;
+            addClass(className: any): void;
+            removeClass(className: any): void;
+            styleClass: string;
+            css(cssprops: any): DomElement;
+            abscss(): any;
+            private getcsspropvalue(name);
+            styleWidth: string;
+            styleHeight: string;
+            private _display;
+            show(): DomElement;
+            hide(): DomElement;
+            private _lastindex;
+            index: string | number;
+            css_transform_to(cssprops: any, transition?: number): DomElement;
+            private _rotation;
+            css_transform_rotate(angle: number, transition?: number): DomElement;
+            css_transform_scale(scale: number, transition?: number): DomElement;
+            css_transform_translate(x: number, y: number, transition?: number): DomElement;
+            private _lasttransition;
+            css_transition: number;
+            /**
+             * Html Document Object Model
+             */
+            appendChild(ele: DomElement): DomElement;
+            prependChild(ele: DomElement): DomElement;
+            insertBefore(ele: DomElement): DomElement;
+            removeChild(ele: DomElement): DomElement;
+            parent(): DomElement;
+            find(selector: string): DomElement[];
+            innerContent(anything: string): void;
+            /**
+             * 读取或更改一个自定义属性
+             */
+            attr(key: any, value?: string): any;
+            data(key: any, value?: string): any;
+            /**
+             * 设置ID
+             * @param id
+             */
+            id: string;
+            /**
+             * 对于该DomElement元素的唯一ID
+             * @returns {number}
+             */
+            apid: number;
+            node: HTMLElement;
+            tagname: string;
         }
     }
 }
@@ -1312,6 +1046,34 @@ declare module alcedo {
  */
 declare module alcedo {
     module canvas {
+        class Camera2D extends AppSubCore {
+            private _stage;
+            private _position;
+            private _focal;
+            private _yaw;
+            private _buffer;
+            private _vieworigin;
+            private _viewfinder;
+            private _viewsafe;
+            constructor(stage: Stage, buffer?: number);
+            x: number;
+            y: number;
+            focal: number;
+            yawX: number;
+            yawY: number;
+            yaw: number;
+            zoomTo(x: number, y: number, focal?: number, yawx?: number, yawy?: number): void;
+            private _updateView();
+            viewfinder(): Rectangle;
+            viewsafe(): Rectangle;
+        }
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/11.
+ */
+declare module alcedo {
+    module canvas {
         /**
          * 当前canvas配置熟悉显示
          */
@@ -1353,6 +1115,75 @@ declare module alcedo {
     }
 }
 /**
+ * Created by tommyZZM on 2015/4/25.
+ */
+declare module alcedo {
+    module canvas {
+        class DisplayGraphic extends DisplayObject {
+            protected _fillcolour: string;
+            protected _linecolour: string;
+            _graphicfn: (context: CanvasRenderingContext2D | any) => void;
+            _draw(renderer: CanvasRenderer): void;
+            fillcolour: string;
+        }
+        module graphic {
+            class Circle extends DisplayGraphic {
+                private _radius;
+                constructor(r?: number, coulour?: string);
+                radius: number;
+            }
+            class Rectangle extends DisplayGraphic {
+                constructor(width?: number, height?: number, coulour?: string);
+            }
+        }
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/22.
+ */
+declare module alcedo {
+    module canvas {
+        class MovieClip extends DisplayObject {
+            private _moveclipdata;
+            private _isPlaying;
+            private _frameRate;
+            private _playTimes;
+            constructor(movieclipdata: MovieClipData);
+            _draw(renderer: CanvasRenderer): void;
+            protected _onAdd(): void;
+            isInViewPort(): boolean;
+            /**
+             * MovieClip API
+             */
+            play(playtimes?: number): void;
+            stop(): void;
+            gotoAndPlay(frame: number | string, playTimes?: number): void;
+            gotoAndStop(frame: number | string): void;
+            private _playtotag;
+            playToAndStop(frame: number, playtimes?: number): void;
+            stopAt(frame: number): void;
+            private setPlayTimes(value);
+            private gotoFrame(index);
+            private selectFrame(index);
+            /**
+             * Movie interal
+             */
+            private _countdt;
+            private _passtime;
+            private _lasttime;
+            private _nextframeindex;
+            private _currframeindex;
+            private _totalframescount;
+            private _currframe;
+            private _frameRateControl(e);
+            private _updateCurrFrame();
+            private _playstate;
+            private _playstatetmp;
+            private setPlayState(value);
+        }
+    }
+}
+/**
  * Created by tommyZZM on 2015/4/10.
  */
 declare module alcedo {
@@ -1363,6 +1194,73 @@ declare module alcedo {
             _draw(renderer: CanvasRenderer): void;
             texture: Texture;
             isInViewPort(): boolean;
+        }
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/8.
+ */
+declare module alcedo {
+    module canvas {
+        class Stage extends DisplatObjectContainer {
+            static ENTER_FRAME: string;
+            static ENTER_MILLSECOND10: string;
+            static ENTER_SECOND: string;
+            static RESIZED: string;
+            static RESIZE: string;
+            private _stageWidth;
+            stageWidth: number;
+            private _stageHeight;
+            stageHeight: number;
+            private _maincontext;
+            private _touchcontext;
+            _options: any;
+            private _orientchanged;
+            private _ticker;
+            private _camera;
+            private _enterframemap;
+            constructor(canvas: dom.DomElement, width?: number, height?: number, opts?: any);
+            width: number;
+            height: number;
+            setStageWidth(width: number): void;
+            setStageHeight(height: number): void;
+            private initcomponent();
+            private initcontext();
+            render(renderer: CanvasRenderer): void;
+            private _startTime;
+            private _lastTime;
+            private _nowTime();
+            /**
+             * 分发EnterFrame消息
+             * @param renderer
+             * @private
+             */
+            private _distapchEnterFrame(renderer);
+            onenterframe(callback: any, thisOBject: any): void;
+            container: dom.DomElement;
+            /**
+             * 获得Canvas
+             * @returns {alcedo.dom.DomElement}
+             */
+            canvas: dom.DomElement;
+            /**
+             * 获得夹层
+             * @returns {alcedo.dom.DomElement}
+             */
+            gasket: dom.DomElement;
+            /**
+             * 获得UI层
+             * @returns {alcedo.dom.DomElement}
+             */
+            canvasui: dom.DomElement;
+            options: any;
+            resizecontext(): void;
+            orientchanged: boolean;
+            viewPort: Rectangle;
+            camera: Camera2D;
+            _transform(): void;
+            isInViewPort(): boolean;
+            addChild(child: DisplayObject): void;
         }
     }
 }
@@ -1428,6 +1326,70 @@ declare module alcedo {
             private _onDecayTask;
             onDecay(callback: Function, thisObject: any, param?: Array<any>): void;
             update(e: ITickerEvent): void;
+        }
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/24.
+ * 离子发射器
+ */
+declare module alcedo {
+    module canvas {
+        class ParticleEmitter extends DisplayObject {
+            private _particlespool;
+            private _particles;
+            private _max;
+            private _particleClass;
+            private _currinitial;
+            private _initial;
+            private _mass;
+            private _spread;
+            private _massrandom;
+            private _rate;
+            private _raterandom;
+            /**
+             * @param initial
+             * @param opts
+             * @particleClass 粒子类
+             */
+            constructor(opts?: any);
+            _draw(renderer: any): void;
+            /**
+             * 创建一枚栗子
+             * @private
+             */
+            private _createOneParticle();
+            private _ParticleInit(paricle);
+            /**
+             * 更新栗子们,判断是否创建栗子
+             * @param e
+             * @private
+             */
+            private _shouldcreate;
+            private _updateParticles(e);
+            /**
+             * 更新一枚栗子
+             * @param partile
+             * @private
+             */
+            protected _updateOneParticle(partile: Particle): void;
+            /**
+             * 粒子行为控制
+             */
+            private _force;
+            applyForce(force: Vector2D): void;
+            initialdegree: number;
+            /**
+             * 发射器开关控制系统
+             * @private
+             */
+            protected _onAdd(): void;
+            play(): void;
+            stop(): void;
+            private _playstate;
+            private _playstatetmp;
+            private setPlayState(value);
+            dispose(): void;
         }
     }
 }
@@ -1509,6 +1471,17 @@ declare module alcedo {
             rotation: any;
             _transform(): any;
             _draw(renderer: CanvasRenderer | any): any;
+        }
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/25.
+ */
+declare module alcedo {
+    module canvas {
+        interface Ixy {
+            x: any;
+            y: any;
         }
     }
 }
@@ -1663,6 +1636,25 @@ declare module alcedo {
             set(key: string, value: Texture): void;
             get(key: string): Texture;
             find(reg: RegExp): Array<any>;
+        }
+    }
+}
+/**
+ * Created by tommyZZM on 2015/4/6.
+ */
+declare module alcedo {
+    module dom {
+        function width(): number;
+        function height(): number;
+        function w2h(): number;
+        var ua: any;
+        function device(): DeviceType;
+        enum DeviceType {
+            Android = 1,
+            IOS = 2,
+            WinPhone = 3,
+            PC = 0,
+            Other = -1,
         }
     }
 }

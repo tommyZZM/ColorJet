@@ -376,6 +376,64 @@ var alcedo;
     })(canvas = alcedo.canvas || (alcedo.canvas = {}));
 })(alcedo || (alcedo = {}));
 /**
+ * Created by tommyZZM on 2015/5/16.
+ */
+//取代AppCycle和AppProxyer
+var alcedo;
+(function (alcedo) {
+    var AppSubCore = (function (_super) {
+        __extends(AppSubCore, _super);
+        //private static uncreateable:boolean = true;
+        function AppSubCore() {
+            var _this = this;
+            _super.call(this);
+            var _startup = this.startUp;
+            _startup.started = false;
+            this.startUp = function () {
+                var anyarg = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    anyarg[_i - 0] = arguments[_i];
+                }
+                if (_startup.started)
+                    return;
+                _startup.apply(_this, anyarg);
+                _startup.started = true;
+            };
+        }
+        AppSubCore.prototype.startUp = function () {
+            var anyarg = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                anyarg[_i - 0] = arguments[_i];
+            }
+            //启动
+        };
+        AppSubCore.prototype.shutDown = function () {
+            var anyarg = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                anyarg[_i - 0] = arguments[_i];
+            }
+            //关闭
+        };
+        AppSubCore.prototype.addCmdHandler = function (notify, callback) {
+            if (!alcedo["@AppOverCore"].instance.postals.has(alcedo["@AppOverCore"].getCoreFullName(this))) {
+                alcedo["@AppOverCore"].instance.postals.set(alcedo["@AppOverCore"].getCoreFullName(this), new Dict());
+            }
+            alcedo["@AppOverCore"].instance.postals.get(alcedo["@AppOverCore"].getCoreFullName(this)).set(notify, { thisobj: this, callback: callback });
+        };
+        AppSubCore.prototype.removeCmdHandler = function (notify, callback) {
+            if (!alcedo["@AppOverCore"].instance.postals.has(alcedo["@AppOverCore"].getCoreFullName(this))) {
+                return;
+            }
+            alcedo["@AppOverCore"].instance.postals.get(alcedo["@AppOverCore"].getCoreFullName(this)).delete(notify);
+        };
+        AppSubCore.prototype.dispatchDemand = function (event, courier) {
+            this.emit(event, courier);
+        };
+        return AppSubCore;
+    })(alcedo.EventDispatcher);
+    alcedo.AppSubCore = AppSubCore;
+})(alcedo || (alcedo = {}));
+/**
  * Created by tommyZZM on 2015/4/8.
  */
 var alcedo;
@@ -857,63 +915,110 @@ var alcedo;
     })(canvas = alcedo.canvas || (alcedo.canvas = {}));
 })(alcedo || (alcedo = {}));
 /**
- * Created by tommyZZM on 2015/5/16.
+ * Created by tommyZZM on 2015/4/3.
  */
-//取代AppCycle和AppProxyer
 var alcedo;
 (function (alcedo) {
-    var AppSubCore = (function (_super) {
-        __extends(AppSubCore, _super);
-        //private static uncreateable:boolean = true;
-        function AppSubCore() {
-            var _this = this;
+    var Event = (function (_super) {
+        __extends(Event, _super);
+        function Event(_type, courier) {
             _super.call(this);
-            var _startup = this.startUp;
-            _startup.started = false;
-            this.startUp = function () {
-                var anyarg = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    anyarg[_i - 0] = arguments[_i];
-                }
-                if (_startup.started)
-                    return;
-                _startup.apply(_this, anyarg);
-                _startup.started = true;
-            };
+            this._type = _type;
+            this._courier = courier;
         }
-        AppSubCore.prototype.startUp = function () {
-            var anyarg = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                anyarg[_i - 0] = arguments[_i];
-            }
-            //启动
-        };
-        AppSubCore.prototype.shutDown = function () {
-            var anyarg = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                anyarg[_i - 0] = arguments[_i];
-            }
-            //关闭
-        };
-        AppSubCore.prototype.addCmdHandler = function (notify, callback) {
-            if (!alcedo["@AppOverCore"].instance.postals.has(alcedo["@AppOverCore"].getCoreFullName(this))) {
-                alcedo["@AppOverCore"].instance.postals.set(alcedo["@AppOverCore"].getCoreFullName(this), new Dict());
-            }
-            alcedo["@AppOverCore"].instance.postals.get(alcedo["@AppOverCore"].getCoreFullName(this)).set(notify, { thisobj: this, callback: callback });
-        };
-        AppSubCore.prototype.removeCmdHandler = function (notify, callback) {
-            if (!alcedo["@AppOverCore"].instance.postals.has(alcedo["@AppOverCore"].getCoreFullName(this))) {
-                return;
-            }
-            alcedo["@AppOverCore"].instance.postals.get(alcedo["@AppOverCore"].getCoreFullName(this)).delete(notify);
-        };
-        AppSubCore.prototype.dispatchDemand = function (event, courier) {
-            this.emit(event, courier);
-        };
-        return AppSubCore;
-    })(alcedo.EventDispatcher);
-    alcedo.AppSubCore = AppSubCore;
+        Object.defineProperty(Event.prototype, "type", {
+            get: function () {
+                return this._type;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Event.prototype, "courier", {
+            get: function () {
+                return this._courier;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Event;
+    })(alcedo.AppObject);
+    alcedo.Event = Event;
 })(alcedo || (alcedo = {}));
+Math.randomFrom = function (begin, to) {
+    var d = to - begin, min = to > begin ? begin : to;
+    if (d < 0)
+        d = -d;
+    return Math.random() * d + min;
+};
+//相加
+Math.add = function () {
+    var nums = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        nums[_i - 0] = arguments[_i];
+    }
+    var result = 0;
+    for (var i = 0; i < nums.length; i++) {
+        if (Number(nums[i])) {
+            result += Number(nums[i]);
+        }
+        else {
+        }
+    }
+    return result;
+};
+//可能性分布概率池
+Math.probabilityPool = function probabilityPool(pool) {
+    if (pool.length == 1) {
+        pool.push(1 - pool[0]);
+    }
+    var cdf = this.probabilityPool._cache.get(pool);
+    var y = Math.random();
+    for (var x in cdf)
+        if (y < cdf[x])
+            return Number(x);
+    return -1; // should never runs here, assuming last element in cdf is 1
+};
+/**缓存数组**/
+Math.probabilityPool._cache = {
+    pool: {},
+    length: 0,
+    get: function (array) {
+        var cachename = array.join("_");
+        if (!this.pool[cachename]) {
+            if (this.length > 100) {
+                this.length = 0;
+                this.pool = {};
+            }
+            this.length++;
+            this.pool[cachename] = Math.probabilityPool._pdf2cdf(array);
+        }
+        return this.pool[cachename];
+    }
+};
+/**逆变换取样**/
+Math.probabilityPool._pdf2cdf = function (pdf) {
+    var total = 0;
+    for (var i = 0; i < pdf.length; i++) {
+        total += pdf[i];
+        if (total > 1) {
+            total -= pdf[i];
+            //warn('total probability in',pdf," scene",pdf[i],'['+i+'] is > 1');
+            pdf.splice(i, pdf.length - i);
+            break;
+        }
+    }
+    if (total < 1) {
+        pdf.push(1);
+    }
+    var cdf = pdf.slice();
+    for (var i = 1; i < cdf.length - 1; i++) {
+        cdf[i] += cdf[i - 1];
+    }
+    // Force set last cdf to 1, preventing floating-point summing error in the loop.
+    cdf[cdf.length - 1] = 1;
+    //trace(pdf,cdf,total)
+    return cdf;
+};
 /**
  * Created by tommyZZM on 2015/4/8.
  */
@@ -1020,133 +1125,6 @@ var alcedo;
         canvas.DisplatObjectContainer = DisplatObjectContainer;
     })(canvas = alcedo.canvas || (alcedo.canvas = {}));
 })(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/3.
- */
-var alcedo;
-(function (alcedo) {
-    var AppCycler = (function (_super) {
-        __extends(AppCycler, _super);
-        function AppCycler() {
-            _super.call(this);
-            this.addCmdHandler(alcedo.AppLauncher.START_UP, this.cmdStartup);
-            alcedo.launch(this, true);
-        }
-        AppCycler.prototype.cmdStartup = function () {
-            var courier = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                courier[_i - 0] = arguments[_i];
-            }
-        };
-        return AppCycler;
-    })(alcedo.AppSubCore);
-    alcedo.AppCycler = AppCycler;
-})(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/3.
- */
-var alcedo;
-(function (alcedo) {
-    var Event = (function (_super) {
-        __extends(Event, _super);
-        function Event(_type, courier) {
-            _super.call(this);
-            this._type = _type;
-            this._courier = courier;
-        }
-        Object.defineProperty(Event.prototype, "type", {
-            get: function () {
-                return this._type;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Event.prototype, "courier", {
-            get: function () {
-                return this._courier;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Event;
-    })(alcedo.AppObject);
-    alcedo.Event = Event;
-})(alcedo || (alcedo = {}));
-Math.randomFrom = function (begin, to) {
-    var d = to - begin, min = to > begin ? begin : to;
-    if (d < 0)
-        d = -d;
-    return Math.random() * d + min;
-};
-//相加
-Math.add = function () {
-    var nums = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        nums[_i - 0] = arguments[_i];
-    }
-    var result = 0;
-    for (var i = 0; i < nums.length; i++) {
-        if (Number(nums[i])) {
-            result += Number(nums[i]);
-        }
-        else {
-        }
-    }
-    return result;
-};
-//可能性分布概率池
-Math.probabilityPool = function probabilityPool(pool) {
-    if (pool.length == 1) {
-        pool.push(1 - pool[0]);
-    }
-    var cdf = this.probabilityPool._cache.get(pool);
-    var y = Math.random();
-    for (var x in cdf)
-        if (y < cdf[x])
-            return Number(x);
-    return -1; // should never runs here, assuming last element in cdf is 1
-};
-/**缓存数组**/
-Math.probabilityPool._cache = {
-    pool: {},
-    length: 0,
-    get: function (array) {
-        var cachename = array.join("_");
-        if (!this.pool[cachename]) {
-            if (this.length > 100) {
-                this.length = 0;
-                this.pool = {};
-            }
-            this.length++;
-            this.pool[cachename] = Math.probabilityPool._pdf2cdf(array);
-        }
-        return this.pool[cachename];
-    }
-};
-/**逆变换取样**/
-Math.probabilityPool._pdf2cdf = function (pdf) {
-    var total = 0;
-    for (var i = 0; i < pdf.length; i++) {
-        total += pdf[i];
-        if (total > 1) {
-            total -= pdf[i];
-            //warn('total probability in',pdf," scene",pdf[i],'['+i+'] is > 1');
-            pdf.splice(i, pdf.length - i);
-            break;
-        }
-    }
-    if (total < 1) {
-        pdf.push(1);
-    }
-    var cdf = pdf.slice();
-    for (var i = 1; i < cdf.length - 1; i++) {
-        cdf[i] += cdf[i - 1];
-    }
-    // Force set last cdf to 1, preventing floating-point summing error in the loop.
-    cdf[cdf.length - 1] = 1;
-    //trace(pdf,cdf,total)
-    return cdf;
-};
 /**
  * Created by tommyZZM on 2015/4/8.
  */
@@ -1339,84 +1317,6 @@ Object.defineProperty(Array.prototype, 'copy', {
     },
     enumerable: false
 });
-/**
- * Created by tommyZZM on 2015/4/4.
- */
-//var ap:any = aperture;
-var alcedo;
-(function (alcedo) {
-    var AppLauncher = (function () {
-        function AppLauncher(debug) {
-            if (AppLauncher._instance) {
-                return;
-            }
-            alcedo.isdebug = debug;
-            alcedo.debuginit();
-            info("%cAlcedo", "color:#1ac2ff;font-weight:bold;", "A Simple TypeScript HTML5 Game FrameWork!");
-            info("gitHub:", 'https://github.com/tommyZZM/Alcedo');
-            info("If you are a non-employee who has discovered this facility amid the ruins of civilization.\n" + "Welcome! And remember: Testing is the future, and the future starts with you.");
-            alcedo.a$ = alcedo["@AppOverCore"].instance;
-        }
-        AppLauncher.prototype.launch = function (app, courier) {
-            if (this._launched)
-                return;
-            this._launched = true;
-            alcedo.a$.dispatchCmd(app, AppLauncher.START_UP, courier);
-        };
-        AppLauncher.instance = function (debug) {
-            if (this._instance == null) {
-                this._instance = new AppLauncher(debug);
-            }
-            //if(this._instance['_game'] && this._instance['_display']){this._instance['_isinit'] = true;}
-            return this._instance;
-        };
-        AppLauncher.START_UP = "AppLauncher.START_UP";
-        return AppLauncher;
-    })();
-    alcedo.AppLauncher = AppLauncher;
-    function launch(app, debug, courier) {
-        AppLauncher.instance(debug).launch(app, courier);
-    }
-    alcedo.launch = launch;
-})(alcedo || (alcedo = {}));
-function trace() {
-    var msg = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        msg[_i - 0] = arguments[_i];
-    }
-}
-function warn() {
-    var msg = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        msg[_i - 0] = arguments[_i];
-    }
-}
-function info() {
-    var msg = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        msg[_i - 0] = arguments[_i];
-    }
-}
-function error() {
-    var msg = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        msg[_i - 0] = arguments[_i];
-    }
-}
-var alcedo;
-(function (alcedo) {
-    function debuginit() {
-        if (alcedo.isdebug) {
-            window["log"] = console.log.bind(console);
-            window["trace"] = console.log.bind(console);
-            window["debug"] = console.debug.bind(console);
-            window["warn"] = console.warn.bind(console);
-            window["info"] = console.info.bind(console);
-            window["error"] = console.error.bind(console);
-        }
-    }
-    alcedo.debuginit = debuginit;
-})(alcedo || (alcedo = {}));
 /**
  * Created by tommyZZM on 2015/4/4.
  */
@@ -1817,59 +1717,26 @@ var alcedo;
     alcedo["@AppOverCore"] = AppOverCore;
 })(alcedo || (alcedo = {}));
 /**
- * Created by tommyZZM on 2015/4/6.
+ * Created by tommyZZM on 2015/4/3.
  */
 var alcedo;
 (function (alcedo) {
-    var Constant = (function () {
-        function Constant() {
+    var AppCycler = (function (_super) {
+        __extends(AppCycler, _super);
+        function AppCycler() {
+            _super.call(this);
+            this.addCmdHandler(alcedo.AppLauncher.START_UP, this.cmdStartup);
+            alcedo.launch(this, true);
         }
-        /**
-         * 得到对应角度值的sin近似值
-         * @param value {number} 角度值
-         * @returns {number} sin值
-         */
-        Constant.sin = function (value) {
-            var result = 0;
-            if (value % (Constant.PI_2 * Constant.RAD_TO_DEG)) {
-                result = Math.sin(value);
+        AppCycler.prototype.cmdStartup = function () {
+            var courier = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                courier[_i - 0] = arguments[_i];
             }
-            else {
-                result = 0;
-            }
-            return result;
         };
-        /**
-         * 得到对应角度值的cos近似值
-         * @param value {number} 角度值
-         * @returns {number} cos值
-         */
-        Constant.cos = function (value) {
-            var result = 0;
-            if (value % (Constant.PI_2 * Constant.RAD_TO_DEG)) {
-                result = Math.cos(value);
-            }
-            else {
-                result = 1;
-            }
-            return Math.cos(value);
-        };
-        Constant.PI = 3.14;
-        /**
-         * @property {Number} PI_2
-         */
-        Constant.PI_2 = Math.PI * 2;
-        /**
-         * @property {Number} RAD_TO_DEG
-         */
-        Constant.RAD_TO_DEG = 180 / Math.PI;
-        /**
-         * @property {Number} DEG_TO_RAD
-         */
-        Constant.DEG_TO_RAD = Math.PI / 180;
-        return Constant;
-    })();
-    alcedo.Constant = Constant;
+        return AppCycler;
+    })(alcedo.AppSubCore);
+    alcedo.AppCycler = AppCycler;
 })(alcedo || (alcedo = {}));
 /**
  * Created by tommyZZM on 2015/4/4.
@@ -1947,516 +1814,137 @@ var alcedo;
     alcedo.AppNotifyable = AppNotifyable;
 })(alcedo || (alcedo = {}));
 /**
- * Created by tommyZZM on 2015/4/22.
+ * Created by tommyZZM on 2015/4/4.
  */
+//var ap:any = aperture;
 var alcedo;
 (function (alcedo) {
-    var canvas;
-    (function (canvas) {
-        var MovieClip = (function (_super) {
-            __extends(MovieClip, _super);
-            function MovieClip(movieclipdata) {
-                _super.call(this);
-                this._moveclipdata = movieclipdata;
-                this._nextframeindex = 0;
-                this._currframeindex = 1;
-                this._totalframescount = movieclipdata.getFrames().length;
-                this._frameRate = movieclipdata.getFrameRate();
-                this._countdt = 1000 / this._frameRate;
-                this._passtime = 0;
-                this._lasttime = 0;
-                this.width = this._moveclipdata.width;
-                this.height = this._moveclipdata.height;
-                this.gotoAndStop(1);
+    var AppLauncher = (function () {
+        function AppLauncher(debug) {
+            if (AppLauncher._instance) {
+                return;
             }
-            MovieClip.prototype._draw = function (renderer) {
-                this._texture_to_render = this._currframe;
-                //console.log(this._position)
-                var texture = this._texture_to_render;
-                if (texture && texture.bitmapData && this._alpha > 0 && this._visible) {
-                    renderer.context.globalAlpha = this._worldalpha;
-                    renderer.setTransform(this._worldtransform);
-                    var offsetX = texture._offsetX - this._moveclipdata.left;
-                    var offsetY = texture._offsetY - this._moveclipdata.top;
-                    var destW = Math.round(texture._sourceWidth);
-                    var destH = Math.round(texture._sourceHeight);
-                    renderer.context.drawImage(texture.bitmapData, texture._sourceX, texture._sourceY, texture._sourceWidth, texture._sourceHeight, offsetX, offsetY, destW, destH);
-                }
-            };
-            MovieClip.prototype._onAdd = function () {
-                _super.prototype._onAdd.call(this);
-                this.setPlayState(this._playstatetmp); //防止在add到stage之前执行playstate;
-            };
-            MovieClip.prototype.isInViewPort = function () {
-                if (!this.isAddtoStage()) {
-                    return false;
-                }
-                var result = this._root.viewPort.hitRectangelTest(this.actualBound());
-                return result;
-            };
-            /**
-             * MovieClip API
-             */
-            MovieClip.prototype.play = function (playtimes) {
-                if (playtimes === void 0) { playtimes = 0; }
-                this._playtotag = -1;
-                this._isPlaying = true;
-                this.setPlayTimes(playtimes);
-                this.setPlayState(true);
-            };
-            MovieClip.prototype.stop = function () {
-                this._playtotag = -1;
-                this._isPlaying = false;
-                this.setPlayState(false);
-            };
-            //TODO:supprot label
-            MovieClip.prototype.gotoAndPlay = function (frame, playTimes) {
-                if (playTimes === void 0) { playTimes = 0; }
-                this.play(playTimes);
-                this.gotoFrame(+frame);
-            };
-            MovieClip.prototype.gotoAndStop = function (frame) {
-                this.stop();
-                this.gotoFrame(+frame);
-            };
-            MovieClip.prototype.playToAndStop = function (frame, playtimes) {
-                if (playtimes === void 0) { playtimes = 0; }
-                this._playtotag = this.selectFrame(frame);
-                this.setPlayTimes(playtimes);
-                this.setPlayState(true);
-            };
-            MovieClip.prototype.stopAt = function (frame) {
-                this._playtotag = this.selectFrame(frame);
-            };
-            MovieClip.prototype.setPlayTimes = function (value) {
-                if (value === 0)
-                    value = -1;
-                if (value < 0 || value >= 1) {
-                    this._playTimes = value < 0 ? -1 : Math.floor(value);
-                }
-            };
-            MovieClip.prototype.gotoFrame = function (index) {
-                var _index = this.selectFrame(index);
-                if (this._nextframeindex === _index) {
-                    return;
-                }
-                this._nextframeindex = _index;
-                this._updateCurrFrame();
-            };
-            MovieClip.prototype.selectFrame = function (index) {
-                var result = index;
-                if (result > this._totalframescount) {
-                    result = this._totalframescount;
-                }
-                else if (result < 1 || !result) {
-                    result = 1;
-                }
-                return result;
-            };
-            MovieClip.prototype._frameRateControl = function (e) {
-                var countdt = this._countdt, currtime = this._passtime + e.dt;
-                this._passtime = currtime % countdt;
-                var delay = currtime / countdt;
-                if (delay < 1) {
-                    return;
-                }
-                delay = delay ^ 0;
-                this._nextframeindex += delay;
-                if (this._nextframeindex > this._totalframescount) {
-                    this._playTimes--;
-                    if (this._playtotag < 1) {
-                        if (this._playTimes == -2) {
-                            this._playTimes++;
-                            this._nextframeindex = 1;
-                        }
-                        else if (this._playTimes > 0) {
-                            this._nextframeindex = 1;
-                        }
-                        else {
-                            this._nextframeindex = this._totalframescount;
-                            this.stop();
-                        }
-                    }
-                    else {
-                        this._nextframeindex = 1;
-                    }
-                }
-                if (this._playtotag >= 1) {
-                    //trace(this._playTimes)
-                    if (this._playTimes <= 0) {
-                        if (this._nextframeindex == this._playtotag) {
-                            this.stop();
-                            this._playtotag = -1;
-                        }
-                    }
-                }
-                this._updateCurrFrame();
-            };
-            MovieClip.prototype._updateCurrFrame = function () {
-                this._currframeindex = this._nextframeindex;
-                var currframe = this._currframeindex - 1;
-                this._currframe = this._moveclipdata.getFrame(currframe);
-            };
-            MovieClip.prototype.setPlayState = function (value) {
-                if (this._playstate == value) {
-                    return;
-                }
-                if (!this.isAddtoStage()) {
-                    this._playstatetmp = value;
-                    trace("'[dev]!this.isAddtoStage()");
-                    return;
-                }
-                this._playstate = value;
-                if (value) {
-                    this._stage.addEventListener(canvas.Stage.ENTER_MILLSECOND10, this._frameRateControl, this, Number.NEGATIVE_INFINITY);
-                }
-                else {
-                    this._stage.removeEventListener(canvas.Stage.ENTER_MILLSECOND10, this._frameRateControl, this);
-                }
-            };
-            return MovieClip;
-        })(canvas.DisplayObject);
-        canvas.MovieClip = MovieClip;
-    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
+            alcedo.isdebug = debug;
+            alcedo.debuginit();
+            info("%cAlcedo", "color:#1ac2ff;font-weight:bold;", "A Simple TypeScript HTML5 Game FrameWork!");
+            info("gitHub:", 'https://github.com/tommyZZM/Alcedo');
+            info("If you are a non-employee who has discovered this facility amid the ruins of civilization.\n" + "Welcome! And remember: Testing is the future, and the future starts with you.");
+            alcedo.a$ = alcedo["@AppOverCore"].instance;
+        }
+        AppLauncher.prototype.launch = function (app, courier) {
+            if (this._launched)
+                return;
+            this._launched = true;
+            alcedo.a$.dispatchCmd(app, AppLauncher.START_UP, courier);
+        };
+        AppLauncher.instance = function (debug) {
+            if (this._instance == null) {
+                this._instance = new AppLauncher(debug);
+            }
+            //if(this._instance['_game'] && this._instance['_display']){this._instance['_isinit'] = true;}
+            return this._instance;
+        };
+        AppLauncher.START_UP = "AppLauncher.START_UP";
+        return AppLauncher;
+    })();
+    alcedo.AppLauncher = AppLauncher;
+    function launch(app, debug, courier) {
+        AppLauncher.instance(debug).launch(app, courier);
+    }
+    alcedo.launch = launch;
 })(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/24.
- * 离子发射器
- */
+function trace() {
+    var msg = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        msg[_i - 0] = arguments[_i];
+    }
+}
+function warn() {
+    var msg = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        msg[_i - 0] = arguments[_i];
+    }
+}
+function info() {
+    var msg = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        msg[_i - 0] = arguments[_i];
+    }
+}
+function error() {
+    var msg = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        msg[_i - 0] = arguments[_i];
+    }
+}
 var alcedo;
 (function (alcedo) {
-    var canvas;
-    (function (canvas) {
-        var ParticleEmitter = (function (_super) {
-            __extends(ParticleEmitter, _super);
-            /**
-             * @param initial
-             * @param opts
-             * @particleClass 粒子类
-             */
-            function ParticleEmitter(opts) {
-                if (opts === void 0) { opts = {}; }
-                _super.call(this);
-                //trace(opts)
-                this._particles = [];
-                this._particlespool = [];
-                this._currinitial = new canvas.Vector2D();
-                //this._forcemoment = new Vector2D();
-                this._force = new canvas.Vector2D();
-                this._shouldcreate = 0;
-                //frequency
-                this._initial = opts.initial ? opts.initial.clone() : new canvas.Vector2D();
-                this._spread = opts.spread || 0;
-                this._mass = opts.massrandom || 1;
-                this._massrandom = opts.massrandom || 0;
-                this._rate = opts.rate || 1;
-                this._max = opts.max || 1;
-                this._particleClass = opts.particleClass ? opts.particleClass : canvas.Particle;
-            }
-            ParticleEmitter.prototype._draw = function (renderer) {
-                var wt, partile;
-                for (var i = 0; i < this._particles.length; i++) {
-                    partile = this._particles[i];
-                    partile._stagetransform(this._stage);
-                    partile._transform();
-                    renderer.context.globalAlpha = partile.alpha * this._alpha;
-                    //trace(partile.alpha,this._alpha,partile.alpha*this._alpha);
-                    //partile.worldtransform = this._getMatrix(partile.worldtransform)
-                    renderer.setTransform(partile.worldtransform);
-                    partile._draw(renderer);
-                }
-            };
-            /**
-             * 创建一枚栗子
-             * @private
-             */
-            ParticleEmitter.prototype._createOneParticle = function () {
-                var _this = this;
-                var partile;
-                if (this._particlespool.length > 0) {
-                    partile = this._particlespool.pop();
-                }
-                else {
-                    partile = new this._particleClass();
-                }
-                this._ParticleInit(partile);
-                this._particles.push(partile);
-                partile.onDecay(function (particle) {
-                    _this._particles.fastRemove(_this._particles.indexOf(particle)); //you dian diao a
-                    _this._particlespool.push(particle);
-                }, this);
-            };
-            ParticleEmitter.prototype._ParticleInit = function (paricle) {
-                paricle.create(this.globalx, this.globaly);
-                this._currinitial.resetAs(this._initial);
-                if (this._spread) {
-                    var _randeg = Math.randomFrom(-1, 1) * this._spread / 2;
-                    var _curdeg = _randeg + this._initial.deg;
-                    this._currinitial.resetToDeg(_curdeg);
-                }
-                paricle.applyForce(this._currinitial);
-            };
-            ParticleEmitter.prototype._updateParticles = function (e) {
-                var partile;
-                for (var i = 0; i < this._particles.length; i++) {
-                    partile = this._particles[i];
-                    this._updateOneParticle(partile);
-                    partile.update(e);
-                }
-                //if(this._forcemoment.length>0){
-                //    this._forcemoment.reset();
-                //}
-                this._shouldcreate += (this._rate / 100);
-                var delay = (this._shouldcreate) ^ 0;
-                if (this._shouldcreate > 1)
-                    this._shouldcreate = 0;
-                //trace(delay,this._particles.length,this._max);
-                if (delay < 1 || this._particles.length >= this._max)
-                    return;
-                for (var i = 0; i < delay; i++) {
-                    //TODO:当i>1时说明错过了上次创建粒子的时机
-                    this._createOneParticle();
-                }
-            };
-            /**
-             * 更新一枚栗子
-             * @param partile
-             * @private
-             */
-            ParticleEmitter.prototype._updateOneParticle = function (partile) {
-                partile.applyForce(this._force);
-                //if(this._forcemoment.length>0){
-                //    partile.applyForce(this._forcemoment);
-                //}
-            };
-            //private _forcemoment:Vector2D;
-            ParticleEmitter.prototype.applyForce = function (force) {
-                this._force.add(force);
-            };
-            Object.defineProperty(ParticleEmitter.prototype, "initialdegree", {
-                set: function (drgee) {
-                    this._initial.resetToDeg(drgee);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            /**
-             * 发射器开关控制系统
-             * @private
-             */
-            ParticleEmitter.prototype._onAdd = function () {
-                _super.prototype._onAdd.call(this);
-                if (this.isAddtoStage()) {
-                    this.setPlayState(this._playstatetmp);
-                }
-            };
-            ParticleEmitter.prototype.play = function () {
-                this.setPlayState(true);
-            };
-            ParticleEmitter.prototype.stop = function () {
-                this.setPlayState(false);
-            };
-            ParticleEmitter.prototype.setPlayState = function (value) {
-                //trace(this._playstate , value)
-                if (this._playstate == value) {
-                    return;
-                }
-                if (!this.isAddtoStage()) {
-                    this._playstatetmp = value;
-                    trace("'[dev particle]!this.isAddtoStage()");
-                    return;
-                }
-                this._playstate = value;
-                if (value) {
-                    this._stage.addEventListener(canvas.Stage.ENTER_MILLSECOND10, this._updateParticles, this);
-                }
-                else {
-                    this._stage.removeEventListener(canvas.Stage.ENTER_MILLSECOND10, this._updateParticles, this);
-                }
-            };
-            ParticleEmitter.prototype.dispose = function () {
-                //todo:释放粒子发射器
-            };
-            return ParticleEmitter;
-        })(canvas.DisplayObject);
-        canvas.ParticleEmitter = ParticleEmitter;
-    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
-})(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/8.
- */
-var alcedo;
-(function (alcedo) {
-    var canvas;
-    (function (canvas) {
-        var Vector2D = (function () {
-            function Vector2D(x, y) {
-                if (x === void 0) { x = 0; }
-                if (y === void 0) { y = 0; }
-                //super();
-                this.x = x;
-                this.y = y;
-            }
-            Vector2D.identity = function (x, y) {
-                if (x === void 0) { x = 0; }
-                if (y === void 0) { y = 0; }
-                Vector2D._identity.reset(x, y);
-                return Vector2D._identity;
-            };
-            //四则运算
-            /** 加 **/
-            Vector2D.prototype.add = function (vector) {
-                this.x += vector.x;
-                this.y += vector.y;
-                return this;
-            };
-            /** 减 **/
-            Vector2D.prototype.subtract = function (vector) {
-                this.x -= vector.x;
-                this.y -= vector.y;
-                return this;
-            };
-            /** 乘 **/
-            Vector2D.prototype.multiply = function (vector) {
-                this.x *= vector.x;
-                this.y *= vector.y;
-                return this;
-            };
-            /** 除 **/
-            Vector2D.prototype.divide = function (value) {
-                var _vaule = value;
-                if (_vaule instanceof Vector2D) {
-                    this.x /= _vaule.x;
-                    this.y /= _vaule.y;
-                }
-                else {
-                    this.x /= _vaule;
-                    this.y /= _vaule;
-                }
-                return this;
-            };
-            Vector2D.prototype.normalize = function () {
-                if (!this._vectornormal)
-                    this._vectornormal = new Vector2D();
-                this._vectornormal.reset(this.y, -this.x);
-                this._vectornormal.length = 1;
-                return this._vectornormal;
-            };
-            Object.defineProperty(Vector2D.prototype, "length", {
-                get: function () {
-                    if (this.x == 0 && this.y == 0)
-                        return 0;
-                    var result = Math.sqrt(this.x * this.x + this.y * this.y);
-                    if (isNaN(result)) {
-                        result = 0;
-                    }
-                    return result;
-                },
-                /**
-                 * 矢量对象长度
-                 */
-                set: function (value) {
-                    var length = this.length;
-                    if (length === 0) {
-                        this.x = 1;
-                        length = 1;
-                    }
-                    length = value / length;
-                    this.x *= length;
-                    this.y *= length;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //转换为单位向量
-            Vector2D.prototype.unitlize = function () {
-                this.length = 1;
-                return this;
-            };
-            Object.defineProperty(Vector2D.prototype, "deg", {
-                get: function () {
-                    //TODO:x,y更新时才需要重新计算 , PS 我也不知道什么要-270哦
-                    return -(Math.atan2(this.x, this.y) * alcedo.Constant.RAD_TO_DEG).toFixed(1) + 90;
-                },
-                set: function (deg) {
-                    var length = this.length;
-                    this.x = alcedo.Constant.cos(deg * alcedo.Constant.DEG_TO_RAD) * length;
-                    this.y = alcedo.Constant.sin(deg * alcedo.Constant.DEG_TO_RAD) * length;
-                    //trace(this.x,this.y);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //法向量角
-            Vector2D.prototype.toNormalDeg = function (left) {
-                return this.deg - (left ? 90 : (-90));
-            };
-            Vector2D.prototype.toRad = function () {
-                return 0;
-            };
-            /**
-             * 克隆矢量对象
-             */
-            Vector2D.prototype.clone = function () {
-                return new Vector2D(this.x, this.y);
-            };
-            Vector2D.prototype.reset = function (x, y) {
-                if (x === void 0) { x = 0; }
-                if (y === void 0) { y = 0; }
-                this.x = x;
-                this.y = y;
-                return this;
-            };
-            Vector2D.prototype.resetAs = function (vector) {
-                if (vector === this)
-                    return this;
-                this.x = vector.x;
-                this.y = vector.y;
-                return this;
-            };
-            Vector2D.prototype.resetToDeg = function (deg) {
-                var length = this.length;
-                if (length === 0) {
-                    return;
-                }
-                this.x = alcedo.Constant.cos(deg * alcedo.Constant.DEG_TO_RAD);
-                this.y = alcedo.Constant.sin(deg * alcedo.Constant.DEG_TO_RAD);
-                this.length = length;
-            };
-            /**
-             * 从两个点创建适量对象
-             */
-            Vector2D.createFromPoint = function (start, end) {
-                return new Vector2D(end.x - start.x, end.y - start.y);
-            };
-            /**
-             * 从一个角度创建向量
-             */
-            Vector2D.createFromDeg = function (deg, length) {
-                if (length === void 0) { length = 1; }
-                return new Vector2D(alcedo.Constant.cos(deg), alcedo.Constant.sin(deg));
-            };
-            Vector2D._identity = new Vector2D();
-            return Vector2D;
-        })();
-        canvas.Vector2D = Vector2D;
-    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
+    function debuginit() {
+        if (alcedo.isdebug) {
+            window["log"] = console.log.bind(console);
+            window["trace"] = console.log.bind(console);
+            window["debug"] = console.debug.bind(console);
+            window["warn"] = console.warn.bind(console);
+            window["info"] = console.info.bind(console);
+            window["error"] = console.error.bind(console);
+        }
+    }
+    alcedo.debuginit = debuginit;
 })(alcedo || (alcedo = {}));
 /**
  * Created by tommyZZM on 2015/4/6.
  */
 var alcedo;
 (function (alcedo) {
-    //canvas 心跳控制器
-    var dom;
-    (function (dom) {
-        var _log_code = {};
-        _log_code["dom" + 1001] = "DomManager是内部使用的单例,无需在外部实例化,请使用d$访问";
-        function log_code(code) {
-            return _log_code["dom" + code];
+    var Constant = (function () {
+        function Constant() {
         }
-        dom.log_code = log_code;
-    })(dom = alcedo.dom || (alcedo.dom = {}));
+        /**
+         * 得到对应角度值的sin近似值
+         * @param value {number} 角度值
+         * @returns {number} sin值
+         */
+        Constant.sin = function (value) {
+            var result = 0;
+            if (value % (Constant.PI_2 * Constant.RAD_TO_DEG)) {
+                result = Math.sin(value);
+            }
+            else {
+                result = 0;
+            }
+            return result;
+        };
+        /**
+         * 得到对应角度值的cos近似值
+         * @param value {number} 角度值
+         * @returns {number} cos值
+         */
+        Constant.cos = function (value) {
+            var result = 0;
+            if (value % (Constant.PI_2 * Constant.RAD_TO_DEG)) {
+                result = Math.cos(value);
+            }
+            else {
+                result = 1;
+            }
+            return Math.cos(value);
+        };
+        Constant.PI = 3.14;
+        /**
+         * @property {Number} PI_2
+         */
+        Constant.PI_2 = Math.PI * 2;
+        /**
+         * @property {Number} RAD_TO_DEG
+         */
+        Constant.RAD_TO_DEG = 180 / Math.PI;
+        /**
+         * @property {Number} DEG_TO_RAD
+         */
+        Constant.DEG_TO_RAD = Math.PI / 180;
+        return Constant;
+    })();
+    alcedo.Constant = Constant;
 })(alcedo || (alcedo = {}));
 /**
  * Created by tommyZZM on 2015/4/5.
@@ -2504,7 +1992,6 @@ var alcedo;
             function DomManager() {
                 _super.call(this);
                 if (DomManager._instance != null) {
-                    console.error(dom.log_code(1001));
                 }
                 this._querypool = new Dict();
                 this._domtask = new Dict();
@@ -2717,93 +2204,375 @@ var alcedo;
     })(dom = alcedo.dom || (alcedo.dom = {}));
 })(alcedo || (alcedo = {}));
 /**
- * Created by tommyZZM on 2015/4/25.
+ * Created by tommyZZM on 2015/4/9.
+ */
+var alcedo;
+(function (alcedo) {
+    function checkNormalType(data) {
+        return (typeof data == "string" || typeof data == "number");
+    }
+    alcedo.checkNormalType = checkNormalType;
+    var _r2value = /(\w*)^((\d|\.)+)(\w*)$/i;
+    function toValue(str) {
+        //trace("toValue",_r2value.exec(str),str)
+        var _str, _rstr = _r2value.exec(str);
+        if (_rstr) {
+            _str = Number(_rstr[2]);
+        }
+        if (!_str) {
+            _str = 0;
+        }
+        return _str;
+    }
+    alcedo.toValue = toValue;
+    /**
+     * TryCatch����
+     * @param fn
+     * @param onerror
+     * @param thisObject
+     */
+    function tryExecute(fn, onerror, thisObject) {
+        try {
+            thisObject ? fn.apply(thisObject) : fn();
+        }
+        catch (e) {
+            thisObject ? onerror.apply(thisObject, e) : onerror(e);
+        }
+    }
+    alcedo.tryExecute = tryExecute;
+})(alcedo || (alcedo = {}));
+/**
+ * Created by tommyZZM on 2015/5/4.
  */
 var alcedo;
 (function (alcedo) {
     var canvas;
     (function (canvas) {
-        var DisplayGraphic = (function (_super) {
-            __extends(DisplayGraphic, _super);
-            function DisplayGraphic() {
+        var TouchEvent = (function (_super) {
+            __extends(TouchEvent, _super);
+            function TouchEvent() {
                 _super.apply(this, arguments);
             }
-            //public graphic(fn:(context:CanvasRenderingContext2D|any)=>void):void{
-            //    this._graphicfn = fn;
-            //}
-            DisplayGraphic.prototype._draw = function (renderer) {
-                this._graphicfn(renderer.context);
+            TouchEvent.createSimpleTouchEvent = function (identifier, x, y) {
+                if (!this.touchTargetPool)
+                    this.touchTargetPool = {};
+                var result = this.touchTargetPool[identifier];
+                if (!result) {
+                    result = this.touchTargetPool[identifier] = {
+                        indentifier: identifier,
+                        x: x,
+                        y: y
+                    };
+                }
+                return result;
             };
-            Object.defineProperty(DisplayGraphic.prototype, "fillcolour", {
-                set: function (clour) {
-                    this._fillcolour = clour;
+            TouchEvent.TOUCH_BEGIN = "canvasTOUCH_BEGIN";
+            TouchEvent.TOUCH_END = "canvasTOUCH_END";
+            TouchEvent.TOUCH_TAP = "canvasTOUCH_TAP";
+            return TouchEvent;
+        })(alcedo.Event);
+        canvas.TouchEvent = TouchEvent;
+    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
+})(alcedo || (alcedo = {}));
+/**
+ * Created by tommyZZM on 2015/4/8.
+ */
+var alcedo;
+(function (alcedo) {
+    var canvas;
+    (function (canvas) {
+        var Vector2D = (function () {
+            function Vector2D(x, y) {
+                if (x === void 0) { x = 0; }
+                if (y === void 0) { y = 0; }
+                //super();
+                this.x = x;
+                this.y = y;
+            }
+            Vector2D.identity = function (x, y) {
+                if (x === void 0) { x = 0; }
+                if (y === void 0) { y = 0; }
+                Vector2D._identity.reset(x, y);
+                return Vector2D._identity;
+            };
+            //四则运算
+            /** 加 **/
+            Vector2D.prototype.add = function (vector) {
+                this.x += vector.x;
+                this.y += vector.y;
+                return this;
+            };
+            /** 减 **/
+            Vector2D.prototype.subtract = function (vector) {
+                this.x -= vector.x;
+                this.y -= vector.y;
+                return this;
+            };
+            /** 乘 **/
+            Vector2D.prototype.multiply = function (vector) {
+                this.x *= vector.x;
+                this.y *= vector.y;
+                return this;
+            };
+            /** 除 **/
+            Vector2D.prototype.divide = function (value) {
+                var _vaule = value;
+                if (_vaule instanceof Vector2D) {
+                    this.x /= _vaule.x;
+                    this.y /= _vaule.y;
+                }
+                else {
+                    this.x /= _vaule;
+                    this.y /= _vaule;
+                }
+                return this;
+            };
+            Vector2D.prototype.normalize = function () {
+                if (!this._vectornormal)
+                    this._vectornormal = new Vector2D();
+                this._vectornormal.reset(this.y, -this.x);
+                this._vectornormal.length = 1;
+                return this._vectornormal;
+            };
+            Object.defineProperty(Vector2D.prototype, "length", {
+                get: function () {
+                    if (this.x == 0 && this.y == 0)
+                        return 0;
+                    var result = Math.sqrt(this.x * this.x + this.y * this.y);
+                    if (isNaN(result)) {
+                        result = 0;
+                    }
+                    return result;
+                },
+                /**
+                 * 矢量对象长度
+                 */
+                set: function (value) {
+                    var length = this.length;
+                    if (length === 0) {
+                        this.x = 1;
+                        length = 1;
+                    }
+                    length = value / length;
+                    this.x *= length;
+                    this.y *= length;
                 },
                 enumerable: true,
                 configurable: true
             });
-            return DisplayGraphic;
-        })(canvas.DisplayObject);
-        canvas.DisplayGraphic = DisplayGraphic;
-        var graphic;
-        (function (graphic) {
-            var Circle = (function (_super) {
-                __extends(Circle, _super);
-                function Circle(r, coulour) {
-                    var _this = this;
-                    if (r === void 0) { r = 5; }
-                    if (coulour === void 0) { coulour = "#000"; }
-                    _super.call(this);
-                    this._fillcolour = coulour;
-                    //this.x = x;
-                    //this.y = y;
-                    this._radius = r;
-                    this._graphicfn = function (context) {
-                        context.beginPath();
-                        context.fillStyle = _this._fillcolour;
-                        context.arc(0, 0, _this._radius, 0, 2 * Math.PI, false);
-                        context.closePath();
-                        context.fill();
-                    };
+            //转换为单位向量
+            Vector2D.prototype.unitlize = function () {
+                this.length = 1;
+                return this;
+            };
+            Object.defineProperty(Vector2D.prototype, "deg", {
+                get: function () {
+                    //TODO:x,y更新时才需要重新计算 , PS 我也不知道什么要-270哦
+                    return -(Math.atan2(this.x, this.y) * alcedo.Constant.RAD_TO_DEG).toFixed(1) + 90;
+                },
+                set: function (deg) {
+                    var length = this.length;
+                    this.x = alcedo.Constant.cos(deg * alcedo.Constant.DEG_TO_RAD) * length;
+                    this.y = alcedo.Constant.sin(deg * alcedo.Constant.DEG_TO_RAD) * length;
+                    //trace(this.x,this.y);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            //法向量角
+            Vector2D.prototype.toNormalDeg = function (left) {
+                return this.deg - (left ? 90 : (-90));
+            };
+            Vector2D.prototype.toRad = function () {
+                return 0;
+            };
+            /**
+             * 克隆矢量对象
+             */
+            Vector2D.prototype.clone = function () {
+                return new Vector2D(this.x, this.y);
+            };
+            Vector2D.prototype.reset = function (x, y) {
+                if (x === void 0) { x = 0; }
+                if (y === void 0) { y = 0; }
+                this.x = x;
+                this.y = y;
+                return this;
+            };
+            Vector2D.prototype.resetAs = function (vector) {
+                if (vector === this)
+                    return this;
+                this.x = vector.x;
+                this.y = vector.y;
+                return this;
+            };
+            Vector2D.prototype.resetToDeg = function (deg) {
+                var length = this.length;
+                if (length === 0) {
+                    return;
                 }
-                Object.defineProperty(Circle.prototype, "radius", {
-                    get: function () {
-                        return this._radius;
-                    },
-                    set: function (value) {
-                        this._radius = value;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                return Circle;
-            })(DisplayGraphic);
-            graphic.Circle = Circle;
-            var Rectangle = (function (_super) {
-                __extends(Rectangle, _super);
-                //private _shapewidth:number;
-                //private _shapeheight:number;
-                function Rectangle(width, height, coulour) {
-                    var _this = this;
-                    if (width === void 0) { width = 100; }
-                    if (height === void 0) { height = 100; }
-                    if (coulour === void 0) { coulour = "#000"; }
-                    _super.call(this);
-                    this._fillcolour = coulour;
-                    //this.x = x;
-                    //this.y = y;
-                    this.width = width;
-                    this.height = height;
-                    this._graphicfn = function (context) {
-                        context.beginPath();
-                        context.fillStyle = _this._fillcolour;
-                        context.fillRect(0, 0, _this.width, _this.height);
-                        context.closePath();
-                    };
+                this.x = alcedo.Constant.cos(deg * alcedo.Constant.DEG_TO_RAD);
+                this.y = alcedo.Constant.sin(deg * alcedo.Constant.DEG_TO_RAD);
+                this.length = length;
+            };
+            /**
+             * 从两个点创建适量对象
+             */
+            Vector2D.createFromPoint = function (start, end) {
+                return new Vector2D(end.x - start.x, end.y - start.y);
+            };
+            /**
+             * 从一个角度创建向量
+             */
+            Vector2D.createFromDeg = function (deg, length) {
+                if (length === void 0) { length = 1; }
+                return new Vector2D(alcedo.Constant.cos(deg), alcedo.Constant.sin(deg));
+            };
+            Vector2D._identity = new Vector2D();
+            return Vector2D;
+        })();
+        canvas.Vector2D = Vector2D;
+    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
+})(alcedo || (alcedo = {}));
+/**
+ * Created by tommyZZM on 2015/4/8.
+ */
+var alcedo;
+(function (alcedo) {
+    var canvas;
+    (function (canvas) {
+        var Rectangle = (function () {
+            function Rectangle(x, y, width, height) {
+                if (x === void 0) { x = 0; }
+                if (y === void 0) { y = 0; }
+                if (width === void 0) { width = 0; }
+                if (height === void 0) { height = 0; }
+                //super();
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+            }
+            Rectangle.identity = function (rect_or_x, y, width, height) {
+                if (rect_or_x === void 0) { rect_or_x = 0; }
+                if (y === void 0) { y = 0; }
+                if (width === void 0) { width = 0; }
+                if (height === void 0) { height = 0; }
+                if (typeof rect_or_x == "number") {
+                    return Rectangle._identity.reset(rect_or_x, y, width, height);
                 }
-                return Rectangle;
-            })(DisplayGraphic);
-            graphic.Rectangle = Rectangle;
-        })(graphic = canvas.graphic || (canvas.graphic = {}));
+                else {
+                    return Rectangle._identity.resetAs(rect_or_x);
+                }
+            };
+            Object.defineProperty(Rectangle.prototype, "right", {
+                /**
+                 * x 和 width 属性的和。
+                 */
+                get: function () {
+                    return this.x + this.width;
+                },
+                set: function (value) {
+                    this.width = value - this.x;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Rectangle.prototype, "bottom", {
+                /**
+                 * y 和 height 属性的和。
+                 */
+                get: function () {
+                    return this.y + this.height;
+                },
+                set: function (value) {
+                    this.height = value - this.y;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            /**
+             * 举行类初始化赋值，开发者尽量调用此方法复用Rectangle对象，而不是每次需要的时候都重新创建
+             */
+            Rectangle.prototype.reset = function (x, y, width, height) {
+                if (x === void 0) { x = 0; }
+                if (y === void 0) { y = 0; }
+                if (width === void 0) { width = 0; }
+                if (height === void 0) { height = 0; }
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                return this;
+            };
+            /**
+             * 举行类初始化赋值，开发者尽量调用此方法复用Rectangle对象，而不是每次需要的时候都重新创建
+             */
+            Rectangle.prototype.resetAs = function (rectangle) {
+                this.x = rectangle.x;
+                this.y = rectangle.y;
+                this.width = rectangle.width;
+                this.height = rectangle.height;
+                return this;
+            };
+            /**
+             * 确定由此 Rectangle 对象定义的矩形区域内是否包含指定的点。
+             * 此方法与 Rectangle.contains() 方法类似，只不过它采用 Point 对象作为参数。
+             */
+            Rectangle.prototype.contains = function (point) {
+                var result = (this.x < point.x && this.x + this.width > point.x && this.y < point.y && this.y + this.height > point.y);
+                return result;
+            };
+            /**
+             * 确定在 toIntersect 参数中指定的对象是否与此 Rectangle 对象相交。此方法检查指定的 Rectangle 对象的 x、y、width 和 height 属性，以查看它是否与此 Rectangle 对象相交。
+             */
+            Rectangle.prototype.hitRectangelTest = function (toHit) {
+                return Math.max(this.x, toHit.x) <= Math.min(this.right, toHit.right) && Math.max(this.y, toHit.y) <= Math.min(this.bottom, toHit.bottom);
+            };
+            /**
+             * 克隆矩形对象
+             */
+            Rectangle.prototype.clone = function () {
+                return new Rectangle(this.x, this.y, this.width, this.height);
+            };
+            /** 乘 **/
+            Rectangle.prototype.multiply = function (vector) {
+                this.x *= vector.x;
+                this.y *= vector.y;
+                this.width *= vector.x;
+                this.height *= vector.y;
+                return this;
+            };
+            /** 除 **/
+            Rectangle.prototype.divide = function (vector) {
+                this.x /= vector.x;
+                this.y /= vector.y;
+                this.width /= vector.x;
+                this.height /= vector.y;
+                return this;
+            };
+            /**
+             * 静态方法
+             */
+            //从4个点生成一个最大包围矩形
+            Rectangle.rectangleFromFourPoint = function (p1, p2, p3, p4, saveRectt) {
+                var __x = Math.min(p1.x, p2.x, p3.x, p4.x);
+                var __y = Math.min(p1.y, p2.y, p3.y, p4.y);
+                var __x_r = Math.max(p1.x, p2.x, p3.x, p4.x);
+                var __y_b = Math.max(p1.y, p2.y, p3.y, p4.y);
+                //trace(p1.x,p2.x,p3.x,p4.x)
+                if (saveRectt) {
+                    saveRectt.reset(__x, __y, (__x_r - __x), (__y_b - __y));
+                }
+                else {
+                    saveRectt = new Rectangle(__x, __y, (__x_r - __x), (__y_b - __y));
+                }
+                return saveRectt;
+            };
+            Rectangle._identity = new Rectangle();
+            return Rectangle;
+        })();
+        canvas.Rectangle = Rectangle;
     })(canvas = alcedo.canvas || (alcedo.canvas = {}));
 })(alcedo || (alcedo = {}));
 /**
@@ -2947,9 +2716,10 @@ var alcedo;
             };
             Object.defineProperty(DomElement.prototype, "styleClass", {
                 get: function () {
-                    this._node.className = this._node.className.replace('  ', ' ');
-                    var result = this.node.className.split(" ");
-                    return result;
+                    return this._node.className;
+                },
+                set: function (calss) {
+                    this._node.className = calss;
                 },
                 enumerable: true,
                 configurable: true
@@ -3187,606 +2957,6 @@ var alcedo;
         })(alcedo.EventDispatcher);
         dom.DomElement = DomElement;
     })(dom = alcedo.dom || (alcedo.dom = {}));
-})(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/11.
- */
-var alcedo;
-(function (alcedo) {
-    var canvas;
-    (function (canvas) {
-        var Camera2D = (function (_super) {
-            __extends(Camera2D, _super);
-            function Camera2D(stage, buffer) {
-                if (buffer === void 0) { buffer = 1.2; }
-                _super.call(this);
-                this._focal = 1;
-                this._yaw = new canvas.Vector2D(0.5, 0.5);
-                this._buffer = buffer > 1 ? buffer : 1;
-                this._position = new canvas.Point2D();
-                this._stage = stage;
-                this._vieworigin = new canvas.Rectangle(stage.x, stage.y, stage.width, stage.height);
-                this._viewfinder = this._vieworigin.clone();
-                this._viewsafe = this._vieworigin.clone();
-                //this.zoomToPoint(Point2D.identity(0,0),1,0);
-            }
-            Object.defineProperty(Camera2D.prototype, "x", {
-                get: function () {
-                    return this._position.x;
-                },
-                set: function (x) {
-                    this._position.x = x;
-                    this._stage.pivotOffsetX = this._position.x;
-                    this._updateView();
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Camera2D.prototype, "y", {
-                get: function () {
-                    return this._position.y;
-                },
-                set: function (y) {
-                    this._position.y = y;
-                    this._stage.pivotOffsetY = this._position.y;
-                    this._updateView();
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Camera2D.prototype, "focal", {
-                get: function () {
-                    return this._focal;
-                },
-                set: function (focal) {
-                    this._focal = focal;
-                    this._updateView();
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Camera2D.prototype, "yawX", {
-                get: function () {
-                    return this._yaw.x;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Camera2D.prototype, "yawY", {
-                get: function () {
-                    return this._yaw.y;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Camera2D.prototype, "yaw", {
-                set: function (yaw) {
-                    this._yaw.x = yaw;
-                    this._yaw.y = yaw;
-                    this._updateView();
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Camera2D.prototype.zoomTo = function (x, y, focal, yawx, yawy) {
-                if (focal === void 0) { focal = 1; }
-                if (yawx === void 0) { yawx = 0.5; }
-                if (yawy === void 0) { yawy = 0.5; }
-                this._position.x = x;
-                this._stage.pivotOffsetX = this._position.x;
-                this._position.y = y;
-                this._stage.pivotOffsetY = this._position.y;
-                this._focal = 1 / focal;
-                this._yaw.x = yawx;
-                this._yaw.y = yawy;
-                this._updateView();
-            };
-            Camera2D.prototype._updateView = function () {
-                //TODO:现在的Viewport计算不正确！
-                this._stage.x = this._stage.width * this._yaw.x;
-                this._stage.y = this._stage.height * this._yaw.y;
-                this._stage.scaleALL(1 / this._focal);
-                this._viewfinder.width = this._focal * this._stage.width;
-                this._viewfinder.height = this._focal * this._stage.height;
-                this._viewfinder.x = this._position.x - this._viewfinder.width / 2;
-                this._viewfinder.y = this._position.y - this._viewfinder.height / 2;
-                var buffer = this._buffer;
-                this._viewsafe.width = this._viewfinder.width; //*buffer;
-                this._viewsafe.height = this._viewfinder.height; //*buffer;
-                this._viewsafe.x = this._viewfinder.x; //-(this._viewfinder.width*(buffer-1))/2;
-                this._viewsafe.y = this._viewfinder.y; //-(this._viewfinder.width*(buffer-1))/2;
-                //trace(this._stage.x,this._stage.y,this._stage.width(),this._stage.height(),this._stage["_staticboundingbox"]);
-            };
-            Camera2D.prototype.viewfinder = function () {
-                return this._viewfinder.clone();
-            };
-            Camera2D.prototype.viewsafe = function () {
-                return this._viewsafe.clone();
-            };
-            return Camera2D;
-        })(alcedo.AppSubCore);
-        canvas.Camera2D = Camera2D;
-    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
-})(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/8.
- */
-var alcedo;
-(function (alcedo) {
-    var canvas;
-    (function (_canvas) {
-        var Stage = (function (_super) {
-            __extends(Stage, _super);
-            function Stage(canvas, width, height, opts) {
-                if (width === void 0) { width = 320; }
-                if (height === void 0) { height = 480; }
-                if (opts === void 0) { opts = {}; }
-                _super.call(this);
-                this._startTime = 0;
-                this._lastTime = 0;
-                this._enterframemap = new Dict();
-                //Stage的宽高一旦被初始化之后就不会改变
-                this._staticboundingbox.width = width;
-                this._staticboundingbox.height = height;
-                this.setStageWidth(width);
-                this.setStageHeight(height);
-                this._options = opts;
-                this.initcomponent();
-                this._maincontext = new _canvas.CanvasMainContext(this, canvas);
-                this.resizecontext();
-                this.initcontext();
-            }
-            Object.defineProperty(Stage.prototype, "stageWidth", {
-                get: function () {
-                    return this._stageWidth;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stage.prototype, "stageHeight", {
-                get: function () {
-                    return this._stageHeight;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stage.prototype, "width", {
-                //只读
-                get: function () {
-                    return this._staticboundingbox.width;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stage.prototype, "height", {
-                get: function () {
-                    return this._staticboundingbox.height;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //设置渲染宽度
-            Stage.prototype.setStageWidth = function (width) {
-                this._stageWidth = width;
-                this._staticboundingbox.width = width;
-            };
-            //设置渲染高度
-            Stage.prototype.setStageHeight = function (height) {
-                this._stageHeight = height;
-                this._staticboundingbox.height = height;
-            };
-            //初始化组件
-            Stage.prototype.initcomponent = function () {
-                this._ticker = new _canvas.Ticker(this);
-                this._camera = new _canvas.Camera2D(this);
-                //this._camera.zoomTo(this.width>>1,this.height*1,1);
-                //trace(this)
-                this._startTime = Date.now();
-            };
-            //初始化子Context
-            Stage.prototype.initcontext = function () {
-                this._touchcontext = new _canvas.TouchContext(this);
-            };
-            //渲染循环
-            Stage.prototype.render = function (renderer) {
-                this._transform(); //遍历显示对象树，计算每个显示对象变换矩阵
-                this._render(renderer); //绘制每个显示对象
-                this._distapchEnterFrame(renderer); //分发EnterFrame事件
-            };
-            Stage.prototype._nowTime = function () {
-                return Date.now() - this._startTime;
-            };
-            /**
-             * 分发EnterFrame消息
-             * @param renderer
-             * @private
-             */
-            Stage.prototype._distapchEnterFrame = function (renderer) {
-                var nowTime = this._nowTime();
-                var dt = nowTime - this._lastTime;
-                //TODO:广播EnterFrame;
-                alcedo.AppNotifyable.notify(this._enterframemap, Stage.ENTER_FRAME, [{ dt: dt, renderer: renderer }]);
-                this.emit(Stage.ENTER_FRAME, { dt: dt });
-                this._lastTime = nowTime;
-            };
-            Stage.prototype.onenterframe = function (callback, thisOBject) {
-                alcedo.AppNotifyable.registNotify(this._enterframemap, Stage.ENTER_FRAME, callback, thisOBject);
-            };
-            Object.defineProperty(Stage.prototype, "container", {
-                get: function () {
-                    return this._maincontext["_canvascontainer"];
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stage.prototype, "canvas", {
-                /**
-                 * 获得Canvas
-                 * @returns {alcedo.dom.DomElement}
-                 */
-                get: function () {
-                    return this._maincontext.canvas;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stage.prototype, "gasket", {
-                /**
-                 * 获得夹层
-                 * @returns {alcedo.dom.DomElement}
-                 */
-                get: function () {
-                    return this._maincontext.gasket;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stage.prototype, "canvasui", {
-                /**
-                 * 获得UI层
-                 * @returns {alcedo.dom.DomElement}
-                 */
-                get: function () {
-                    return this._maincontext.canvasui;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stage.prototype, "options", {
-                //Stage的设置
-                get: function () {
-                    return this._options;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            //resize
-            Stage.prototype.resizecontext = function () {
-                this._maincontext.resizecontext();
-            };
-            Object.defineProperty(Stage.prototype, "orientchanged", {
-                //获得轴向是否改变了
-                get: function () {
-                    return this._maincontext.checkorient();
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stage.prototype, "viewPort", {
-                //获得取景器
-                get: function () {
-                    return this._camera.viewsafe();
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stage.prototype, "camera", {
-                //获得镜头
-                get: function () {
-                    return this._camera;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Stage.prototype._transform = function () {
-                var wt = this._worldtransform;
-                wt.identity();
-                this._getMatrix(wt);
-                this.eachChilder(function (child) {
-                    child._transform();
-                });
-            };
-            Stage.prototype.isInViewPort = function () {
-                return true;
-                //nothing
-            };
-            Stage.prototype.addChild = function (child) {
-                if (child instanceof Stage)
-                    return; //todo:error log here;
-                _super.prototype.addChild.call(this, child);
-            };
-            Stage.ENTER_FRAME = "Stage_ENTER_FRAME";
-            Stage.ENTER_MILLSECOND10 = "Stage_ENTER_20MILLSECOND";
-            Stage.ENTER_SECOND = "Stage_ENTER_SECOND";
-            Stage.RESIZED = "Stage_RESIZED";
-            Stage.RESIZE = "Stage_RESIZE";
-            return Stage;
-        })(_canvas.DisplatObjectContainer);
-        _canvas.Stage = Stage;
-    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
-})(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/6.
- */
-var alcedo;
-(function (alcedo) {
-    var dom;
-    (function (dom) {
-        function width() {
-            var result;
-            if (document.documentElement.clientWidth) {
-                result = document.documentElement.clientWidth;
-            }
-            else {
-                result = window.innerWidth;
-            }
-            return result;
-        }
-        dom.width = width;
-        function height() {
-            var result;
-            if (document.documentElement.clientHeight) {
-                result = document.documentElement.clientHeight;
-            }
-            else {
-                result = window.innerHeight;
-            }
-            return result;
-        }
-        dom.height = height;
-        function w2h() {
-            return width() / height();
-        }
-        dom.w2h = w2h;
-        var navigator;
-        if (!navigator) {
-            navigator = { userAgent: "commonJS" };
-        }
-        dom.ua = navigator.userAgent.toLowerCase();
-        function device() {
-            if (/iphone|ipad|ipod/i.test(dom.ua)) {
-                return 2 /* IOS */;
-            }
-            if (/android/i.test(dom.ua)) {
-                return 1 /* Android */;
-            }
-            if (/windows/i.test(dom.ua) && /phone/i.test(dom.ua)) {
-                return 3 /* WinPhone */;
-            }
-            return 0 /* PC */;
-        }
-        dom.device = device;
-        (function (DeviceType) {
-            DeviceType[DeviceType["Android"] = 1] = "Android";
-            DeviceType[DeviceType["IOS"] = 2] = "IOS";
-            DeviceType[DeviceType["WinPhone"] = 3] = "WinPhone";
-            DeviceType[DeviceType["PC"] = 0] = "PC";
-            DeviceType[DeviceType["Other"] = -1] = "Other";
-        })(dom.DeviceType || (dom.DeviceType = {}));
-        var DeviceType = dom.DeviceType;
-    })(dom = alcedo.dom || (alcedo.dom = {}));
-})(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/9.
- */
-var alcedo;
-(function (alcedo) {
-    function checkNormalType(data) {
-        return (typeof data == "string" || typeof data == "number");
-    }
-    alcedo.checkNormalType = checkNormalType;
-    var _r2value = /(\w*)^((\d|\.)+)(\w*)$/i;
-    function toValue(str) {
-        //trace("toValue",_r2value.exec(str),str)
-        var _str, _rstr = _r2value.exec(str);
-        if (_rstr) {
-            _str = Number(_rstr[2]);
-        }
-        if (!_str) {
-            _str = 0;
-        }
-        return _str;
-    }
-    alcedo.toValue = toValue;
-    /**
-     * TryCatch����
-     * @param fn
-     * @param onerror
-     * @param thisObject
-     */
-    function tryExecute(fn, onerror, thisObject) {
-        try {
-            thisObject ? fn.apply(thisObject) : fn();
-        }
-        catch (e) {
-            thisObject ? onerror.apply(thisObject, e) : onerror(e);
-        }
-    }
-    alcedo.tryExecute = tryExecute;
-})(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/5/4.
- */
-var alcedo;
-(function (alcedo) {
-    var canvas;
-    (function (canvas) {
-        var TouchEvent = (function (_super) {
-            __extends(TouchEvent, _super);
-            function TouchEvent() {
-                _super.apply(this, arguments);
-            }
-            TouchEvent.createSimpleTouchEvent = function (identifier, x, y) {
-                if (!this.touchTargetPool)
-                    this.touchTargetPool = {};
-                var result = this.touchTargetPool[identifier];
-                if (!result) {
-                    result = this.touchTargetPool[identifier] = {
-                        indentifier: identifier,
-                        x: x,
-                        y: y
-                    };
-                }
-                return result;
-            };
-            TouchEvent.TOUCH_BEGIN = "canvasTOUCH_BEGIN";
-            TouchEvent.TOUCH_END = "canvasTOUCH_END";
-            TouchEvent.TOUCH_TAP = "canvasTOUCH_TAP";
-            return TouchEvent;
-        })(alcedo.Event);
-        canvas.TouchEvent = TouchEvent;
-    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
-})(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/8.
- */
-var alcedo;
-(function (alcedo) {
-    var canvas;
-    (function (canvas) {
-        var Rectangle = (function () {
-            function Rectangle(x, y, width, height) {
-                if (x === void 0) { x = 0; }
-                if (y === void 0) { y = 0; }
-                if (width === void 0) { width = 0; }
-                if (height === void 0) { height = 0; }
-                //super();
-                this.x = x;
-                this.y = y;
-                this.width = width;
-                this.height = height;
-            }
-            Rectangle.identity = function (rect_or_x, y, width, height) {
-                if (rect_or_x === void 0) { rect_or_x = 0; }
-                if (y === void 0) { y = 0; }
-                if (width === void 0) { width = 0; }
-                if (height === void 0) { height = 0; }
-                if (typeof rect_or_x == "number") {
-                    return Rectangle._identity.reset(rect_or_x, y, width, height);
-                }
-                else {
-                    return Rectangle._identity.resetAs(rect_or_x);
-                }
-            };
-            Object.defineProperty(Rectangle.prototype, "right", {
-                /**
-                 * x 和 width 属性的和。
-                 */
-                get: function () {
-                    return this.x + this.width;
-                },
-                set: function (value) {
-                    this.width = value - this.x;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Rectangle.prototype, "bottom", {
-                /**
-                 * y 和 height 属性的和。
-                 */
-                get: function () {
-                    return this.y + this.height;
-                },
-                set: function (value) {
-                    this.height = value - this.y;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            /**
-             * 举行类初始化赋值，开发者尽量调用此方法复用Rectangle对象，而不是每次需要的时候都重新创建
-             */
-            Rectangle.prototype.reset = function (x, y, width, height) {
-                if (x === void 0) { x = 0; }
-                if (y === void 0) { y = 0; }
-                if (width === void 0) { width = 0; }
-                if (height === void 0) { height = 0; }
-                this.x = x;
-                this.y = y;
-                this.width = width;
-                this.height = height;
-                return this;
-            };
-            /**
-             * 举行类初始化赋值，开发者尽量调用此方法复用Rectangle对象，而不是每次需要的时候都重新创建
-             */
-            Rectangle.prototype.resetAs = function (rectangle) {
-                this.x = rectangle.x;
-                this.y = rectangle.y;
-                this.width = rectangle.width;
-                this.height = rectangle.height;
-                return this;
-            };
-            /**
-             * 确定由此 Rectangle 对象定义的矩形区域内是否包含指定的点。
-             * 此方法与 Rectangle.contains() 方法类似，只不过它采用 Point 对象作为参数。
-             */
-            Rectangle.prototype.contains = function (point) {
-                var result = (this.x < point.x && this.x + this.width > point.x && this.y < point.y && this.y + this.height > point.y);
-                return result;
-            };
-            /**
-             * 确定在 toIntersect 参数中指定的对象是否与此 Rectangle 对象相交。此方法检查指定的 Rectangle 对象的 x、y、width 和 height 属性，以查看它是否与此 Rectangle 对象相交。
-             */
-            Rectangle.prototype.hitRectangelTest = function (toHit) {
-                return Math.max(this.x, toHit.x) <= Math.min(this.right, toHit.right) && Math.max(this.y, toHit.y) <= Math.min(this.bottom, toHit.bottom);
-            };
-            /**
-             * 克隆矩形对象
-             */
-            Rectangle.prototype.clone = function () {
-                return new Rectangle(this.x, this.y, this.width, this.height);
-            };
-            /** 乘 **/
-            Rectangle.prototype.multiply = function (vector) {
-                this.x *= vector.x;
-                this.y *= vector.y;
-                this.width *= vector.x;
-                this.height *= vector.y;
-                return this;
-            };
-            /** 除 **/
-            Rectangle.prototype.divide = function (vector) {
-                this.x /= vector.x;
-                this.y /= vector.y;
-                this.width /= vector.x;
-                this.height /= vector.y;
-                return this;
-            };
-            /**
-             * 静态方法
-             */
-            //从4个点生成一个最大包围矩形
-            Rectangle.rectangleFromFourPoint = function (p1, p2, p3, p4, saveRectt) {
-                var __x = Math.min(p1.x, p2.x, p3.x, p4.x);
-                var __y = Math.min(p1.y, p2.y, p3.y, p4.y);
-                var __x_r = Math.max(p1.x, p2.x, p3.x, p4.x);
-                var __y_b = Math.max(p1.y, p2.y, p3.y, p4.y);
-                //trace(p1.x,p2.x,p3.x,p4.x)
-                if (saveRectt) {
-                    saveRectt.reset(__x, __y, (__x_r - __x), (__y_b - __y));
-                }
-                else {
-                    saveRectt = new Rectangle(__x, __y, (__x_r - __x), (__y_b - __y));
-                }
-                return saveRectt;
-            };
-            Rectangle._identity = new Rectangle();
-            return Rectangle;
-        })();
-        canvas.Rectangle = Rectangle;
-    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
 })(alcedo || (alcedo = {}));
 /**
  * Created by tommyZZM on 2015/4/13.
@@ -4196,6 +3366,126 @@ var alcedo;
 (function (alcedo) {
     var canvas;
     (function (canvas) {
+        var Camera2D = (function (_super) {
+            __extends(Camera2D, _super);
+            function Camera2D(stage, buffer) {
+                if (buffer === void 0) { buffer = 1.2; }
+                _super.call(this);
+                this._focal = 1;
+                this._yaw = new canvas.Vector2D(0.5, 0.5);
+                this._buffer = buffer > 1 ? buffer : 1;
+                this._position = new canvas.Point2D();
+                this._stage = stage;
+                this._vieworigin = new canvas.Rectangle(stage.x, stage.y, stage.width, stage.height);
+                this._viewfinder = this._vieworigin.clone();
+                this._viewsafe = this._vieworigin.clone();
+                //this.zoomToPoint(Point2D.identity(0,0),1,0);
+            }
+            Object.defineProperty(Camera2D.prototype, "x", {
+                get: function () {
+                    return this._position.x;
+                },
+                set: function (x) {
+                    this._position.x = x;
+                    this._stage.pivotOffsetX = this._position.x;
+                    this._updateView();
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Camera2D.prototype, "y", {
+                get: function () {
+                    return this._position.y;
+                },
+                set: function (y) {
+                    this._position.y = y;
+                    this._stage.pivotOffsetY = this._position.y;
+                    this._updateView();
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Camera2D.prototype, "focal", {
+                get: function () {
+                    return this._focal;
+                },
+                set: function (focal) {
+                    this._focal = focal;
+                    this._updateView();
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Camera2D.prototype, "yawX", {
+                get: function () {
+                    return this._yaw.x;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Camera2D.prototype, "yawY", {
+                get: function () {
+                    return this._yaw.y;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Camera2D.prototype, "yaw", {
+                set: function (yaw) {
+                    this._yaw.x = yaw;
+                    this._yaw.y = yaw;
+                    this._updateView();
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Camera2D.prototype.zoomTo = function (x, y, focal, yawx, yawy) {
+                if (focal === void 0) { focal = 1; }
+                if (yawx === void 0) { yawx = 0.5; }
+                if (yawy === void 0) { yawy = 0.5; }
+                this._position.x = x;
+                this._stage.pivotOffsetX = this._position.x;
+                this._position.y = y;
+                this._stage.pivotOffsetY = this._position.y;
+                this._focal = 1 / focal;
+                this._yaw.x = yawx;
+                this._yaw.y = yawy;
+                this._updateView();
+            };
+            Camera2D.prototype._updateView = function () {
+                //TODO:现在的Viewport计算不正确！
+                this._stage.x = this._stage.width * this._yaw.x;
+                this._stage.y = this._stage.height * this._yaw.y;
+                this._stage.scaleALL(1 / this._focal);
+                this._viewfinder.width = this._focal * this._stage.width;
+                this._viewfinder.height = this._focal * this._stage.height;
+                this._viewfinder.x = this._position.x - this._viewfinder.width / 2;
+                this._viewfinder.y = this._position.y - this._viewfinder.height / 2;
+                var buffer = this._buffer;
+                this._viewsafe.width = this._viewfinder.width; //*buffer;
+                this._viewsafe.height = this._viewfinder.height; //*buffer;
+                this._viewsafe.x = this._viewfinder.x; //-(this._viewfinder.width*(buffer-1))/2;
+                this._viewsafe.y = this._viewfinder.y; //-(this._viewfinder.width*(buffer-1))/2;
+                //trace(this._stage.x,this._stage.y,this._stage.width(),this._stage.height(),this._stage["_staticboundingbox"]);
+            };
+            Camera2D.prototype.viewfinder = function () {
+                return this._viewfinder.clone();
+            };
+            Camera2D.prototype.viewsafe = function () {
+                return this._viewsafe.clone();
+            };
+            return Camera2D;
+        })(alcedo.AppSubCore);
+        canvas.Camera2D = Camera2D;
+    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
+})(alcedo || (alcedo = {}));
+/**
+ * Created by tommyZZM on 2015/4/11.
+ */
+var alcedo;
+(function (alcedo) {
+    var canvas;
+    (function (canvas) {
         /**
          * 当前canvas配置熟悉显示
          */
@@ -4302,6 +3592,269 @@ var alcedo;
     })(canvas = alcedo.canvas || (alcedo.canvas = {}));
 })(alcedo || (alcedo = {}));
 /**
+ * Created by tommyZZM on 2015/4/25.
+ */
+var alcedo;
+(function (alcedo) {
+    var canvas;
+    (function (canvas) {
+        var DisplayGraphic = (function (_super) {
+            __extends(DisplayGraphic, _super);
+            function DisplayGraphic() {
+                _super.apply(this, arguments);
+            }
+            //public graphic(fn:(context:CanvasRenderingContext2D|any)=>void):void{
+            //    this._graphicfn = fn;
+            //}
+            DisplayGraphic.prototype._draw = function (renderer) {
+                this._graphicfn(renderer.context);
+            };
+            Object.defineProperty(DisplayGraphic.prototype, "fillcolour", {
+                set: function (clour) {
+                    this._fillcolour = clour;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return DisplayGraphic;
+        })(canvas.DisplayObject);
+        canvas.DisplayGraphic = DisplayGraphic;
+        var graphic;
+        (function (graphic) {
+            var Circle = (function (_super) {
+                __extends(Circle, _super);
+                function Circle(r, coulour) {
+                    var _this = this;
+                    if (r === void 0) { r = 5; }
+                    if (coulour === void 0) { coulour = "#000"; }
+                    _super.call(this);
+                    this._fillcolour = coulour;
+                    //this.x = x;
+                    //this.y = y;
+                    this._radius = r;
+                    this._graphicfn = function (context) {
+                        context.beginPath();
+                        context.fillStyle = _this._fillcolour;
+                        context.arc(0, 0, _this._radius, 0, 2 * Math.PI, false);
+                        context.closePath();
+                        context.fill();
+                    };
+                }
+                Object.defineProperty(Circle.prototype, "radius", {
+                    get: function () {
+                        return this._radius;
+                    },
+                    set: function (value) {
+                        this._radius = value;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                return Circle;
+            })(DisplayGraphic);
+            graphic.Circle = Circle;
+            var Rectangle = (function (_super) {
+                __extends(Rectangle, _super);
+                //private _shapewidth:number;
+                //private _shapeheight:number;
+                function Rectangle(width, height, coulour) {
+                    var _this = this;
+                    if (width === void 0) { width = 100; }
+                    if (height === void 0) { height = 100; }
+                    if (coulour === void 0) { coulour = "#000"; }
+                    _super.call(this);
+                    this._fillcolour = coulour;
+                    //this.x = x;
+                    //this.y = y;
+                    this.width = width;
+                    this.height = height;
+                    this._graphicfn = function (context) {
+                        context.beginPath();
+                        context.fillStyle = _this._fillcolour;
+                        context.fillRect(0, 0, _this.width, _this.height);
+                        context.closePath();
+                    };
+                }
+                return Rectangle;
+            })(DisplayGraphic);
+            graphic.Rectangle = Rectangle;
+        })(graphic = canvas.graphic || (canvas.graphic = {}));
+    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
+})(alcedo || (alcedo = {}));
+/**
+ * Created by tommyZZM on 2015/4/22.
+ */
+var alcedo;
+(function (alcedo) {
+    var canvas;
+    (function (canvas) {
+        var MovieClip = (function (_super) {
+            __extends(MovieClip, _super);
+            function MovieClip(movieclipdata) {
+                _super.call(this);
+                this._moveclipdata = movieclipdata;
+                this._nextframeindex = 0;
+                this._currframeindex = 1;
+                this._totalframescount = movieclipdata.getFrames().length;
+                this._frameRate = movieclipdata.getFrameRate();
+                this._countdt = 1000 / this._frameRate;
+                this._passtime = 0;
+                this._lasttime = 0;
+                this.width = this._moveclipdata.width;
+                this.height = this._moveclipdata.height;
+                this.gotoAndStop(1);
+            }
+            MovieClip.prototype._draw = function (renderer) {
+                this._texture_to_render = this._currframe;
+                //console.log(this._position)
+                var texture = this._texture_to_render;
+                if (texture && texture.bitmapData && this._alpha > 0 && this._visible) {
+                    renderer.context.globalAlpha = this._worldalpha;
+                    renderer.setTransform(this._worldtransform);
+                    var offsetX = texture._offsetX - this._moveclipdata.left;
+                    var offsetY = texture._offsetY - this._moveclipdata.top;
+                    var destW = Math.round(texture._sourceWidth);
+                    var destH = Math.round(texture._sourceHeight);
+                    renderer.context.drawImage(texture.bitmapData, texture._sourceX, texture._sourceY, texture._sourceWidth, texture._sourceHeight, offsetX, offsetY, destW, destH);
+                }
+            };
+            MovieClip.prototype._onAdd = function () {
+                _super.prototype._onAdd.call(this);
+                this.setPlayState(this._playstatetmp); //防止在add到stage之前执行playstate;
+            };
+            MovieClip.prototype.isInViewPort = function () {
+                if (!this.isAddtoStage()) {
+                    return false;
+                }
+                var result = this._root.viewPort.hitRectangelTest(this.actualBound());
+                return result;
+            };
+            /**
+             * MovieClip API
+             */
+            MovieClip.prototype.play = function (playtimes) {
+                if (playtimes === void 0) { playtimes = 0; }
+                this._playtotag = -1;
+                this._isPlaying = true;
+                this.setPlayTimes(playtimes);
+                this.setPlayState(true);
+            };
+            MovieClip.prototype.stop = function () {
+                this._playtotag = -1;
+                this._isPlaying = false;
+                this.setPlayState(false);
+            };
+            //TODO:supprot label
+            MovieClip.prototype.gotoAndPlay = function (frame, playTimes) {
+                if (playTimes === void 0) { playTimes = 0; }
+                this.play(playTimes);
+                this.gotoFrame(+frame);
+            };
+            MovieClip.prototype.gotoAndStop = function (frame) {
+                this.stop();
+                this.gotoFrame(+frame);
+            };
+            MovieClip.prototype.playToAndStop = function (frame, playtimes) {
+                if (playtimes === void 0) { playtimes = 0; }
+                this._playtotag = this.selectFrame(frame);
+                this.setPlayTimes(playtimes);
+                this.setPlayState(true);
+            };
+            MovieClip.prototype.stopAt = function (frame) {
+                this._playtotag = this.selectFrame(frame);
+            };
+            MovieClip.prototype.setPlayTimes = function (value) {
+                if (value === 0)
+                    value = -1;
+                if (value < 0 || value >= 1) {
+                    this._playTimes = value < 0 ? -1 : Math.floor(value);
+                }
+            };
+            MovieClip.prototype.gotoFrame = function (index) {
+                var _index = this.selectFrame(index);
+                if (this._nextframeindex === _index) {
+                    return;
+                }
+                this._nextframeindex = _index;
+                this._updateCurrFrame();
+            };
+            MovieClip.prototype.selectFrame = function (index) {
+                var result = index;
+                if (result > this._totalframescount) {
+                    result = this._totalframescount;
+                }
+                else if (result < 1 || !result) {
+                    result = 1;
+                }
+                return result;
+            };
+            MovieClip.prototype._frameRateControl = function (e) {
+                var countdt = this._countdt, currtime = this._passtime + e.dt;
+                this._passtime = currtime % countdt;
+                var delay = currtime / countdt;
+                if (delay < 1) {
+                    return;
+                }
+                delay = delay ^ 0;
+                this._nextframeindex += delay;
+                if (this._nextframeindex > this._totalframescount) {
+                    this._playTimes--;
+                    if (this._playtotag < 1) {
+                        if (this._playTimes == -2) {
+                            this._playTimes++;
+                            this._nextframeindex = 1;
+                        }
+                        else if (this._playTimes > 0) {
+                            this._nextframeindex = 1;
+                        }
+                        else {
+                            this._nextframeindex = this._totalframescount;
+                            this.stop();
+                        }
+                    }
+                    else {
+                        this._nextframeindex = 1;
+                    }
+                }
+                if (this._playtotag >= 1) {
+                    //trace(this._playTimes)
+                    if (this._playTimes <= 0) {
+                        if (this._nextframeindex == this._playtotag) {
+                            this.stop();
+                            this._playtotag = -1;
+                        }
+                    }
+                }
+                this._updateCurrFrame();
+            };
+            MovieClip.prototype._updateCurrFrame = function () {
+                this._currframeindex = this._nextframeindex;
+                var currframe = this._currframeindex - 1;
+                this._currframe = this._moveclipdata.getFrame(currframe);
+            };
+            MovieClip.prototype.setPlayState = function (value) {
+                if (this._playstate == value) {
+                    return;
+                }
+                if (!this.isAddtoStage()) {
+                    this._playstatetmp = value;
+                    trace("'[dev]!this.isAddtoStage()");
+                    return;
+                }
+                this._playstate = value;
+                if (value) {
+                    this._stage.addEventListener(canvas.Stage.ENTER_MILLSECOND10, this._frameRateControl, this, Number.NEGATIVE_INFINITY);
+                }
+                else {
+                    this._stage.removeEventListener(canvas.Stage.ENTER_MILLSECOND10, this._frameRateControl, this);
+                }
+            };
+            return MovieClip;
+        })(canvas.DisplayObject);
+        canvas.MovieClip = MovieClip;
+    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
+})(alcedo || (alcedo = {}));
+/**
  * Created by tommyZZM on 2015/4/10.
  */
 var alcedo;
@@ -4351,6 +3904,213 @@ var alcedo;
             return Sprite;
         })(canvas.DisplayObject);
         canvas.Sprite = Sprite;
+    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
+})(alcedo || (alcedo = {}));
+/**
+ * Created by tommyZZM on 2015/4/8.
+ */
+var alcedo;
+(function (alcedo) {
+    var canvas;
+    (function (_canvas) {
+        var Stage = (function (_super) {
+            __extends(Stage, _super);
+            function Stage(canvas, width, height, opts) {
+                if (width === void 0) { width = 320; }
+                if (height === void 0) { height = 480; }
+                if (opts === void 0) { opts = {}; }
+                _super.call(this);
+                this._startTime = 0;
+                this._lastTime = 0;
+                this._enterframemap = new Dict();
+                //Stage的宽高一旦被初始化之后就不会改变
+                this._staticboundingbox.width = width;
+                this._staticboundingbox.height = height;
+                this.setStageWidth(width);
+                this.setStageHeight(height);
+                this._options = opts;
+                this.initcomponent();
+                this._maincontext = new _canvas.CanvasMainContext(this, canvas);
+                this.resizecontext();
+                this.initcontext();
+            }
+            Object.defineProperty(Stage.prototype, "stageWidth", {
+                get: function () {
+                    return this._stageWidth;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stage.prototype, "stageHeight", {
+                get: function () {
+                    return this._stageHeight;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stage.prototype, "width", {
+                //只读
+                get: function () {
+                    return this._staticboundingbox.width;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stage.prototype, "height", {
+                get: function () {
+                    return this._staticboundingbox.height;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            //设置渲染宽度
+            Stage.prototype.setStageWidth = function (width) {
+                this._stageWidth = width;
+                this._staticboundingbox.width = width;
+            };
+            //设置渲染高度
+            Stage.prototype.setStageHeight = function (height) {
+                this._stageHeight = height;
+                this._staticboundingbox.height = height;
+            };
+            //初始化组件
+            Stage.prototype.initcomponent = function () {
+                this._ticker = new _canvas.Ticker(this);
+                this._camera = new _canvas.Camera2D(this);
+                //this._camera.zoomTo(this.width>>1,this.height*1,1);
+                //trace(this)
+                this._startTime = Date.now();
+            };
+            //初始化子Context
+            Stage.prototype.initcontext = function () {
+                this._touchcontext = new _canvas.TouchContext(this);
+            };
+            //渲染循环
+            Stage.prototype.render = function (renderer) {
+                this._transform(); //遍历显示对象树，计算每个显示对象变换矩阵
+                this._render(renderer); //绘制每个显示对象
+                this._distapchEnterFrame(renderer); //分发EnterFrame事件
+            };
+            Stage.prototype._nowTime = function () {
+                return Date.now() - this._startTime;
+            };
+            /**
+             * 分发EnterFrame消息
+             * @param renderer
+             * @private
+             */
+            Stage.prototype._distapchEnterFrame = function (renderer) {
+                var nowTime = this._nowTime();
+                var dt = nowTime - this._lastTime;
+                //TODO:广播EnterFrame;
+                alcedo.AppNotifyable.notify(this._enterframemap, Stage.ENTER_FRAME, [{ dt: dt, renderer: renderer }]);
+                this.emit(Stage.ENTER_FRAME, { dt: dt });
+                this._lastTime = nowTime;
+            };
+            Stage.prototype.onenterframe = function (callback, thisOBject) {
+                alcedo.AppNotifyable.registNotify(this._enterframemap, Stage.ENTER_FRAME, callback, thisOBject);
+            };
+            Object.defineProperty(Stage.prototype, "container", {
+                get: function () {
+                    return this._maincontext["_canvascontainer"];
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stage.prototype, "canvas", {
+                /**
+                 * 获得Canvas
+                 * @returns {alcedo.dom.DomElement}
+                 */
+                get: function () {
+                    return this._maincontext.canvas;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stage.prototype, "gasket", {
+                /**
+                 * 获得夹层
+                 * @returns {alcedo.dom.DomElement}
+                 */
+                get: function () {
+                    return this._maincontext.gasket;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stage.prototype, "canvasui", {
+                /**
+                 * 获得UI层
+                 * @returns {alcedo.dom.DomElement}
+                 */
+                get: function () {
+                    return this._maincontext.canvasui;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stage.prototype, "options", {
+                //Stage的设置
+                get: function () {
+                    return this._options;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            //resize
+            Stage.prototype.resizecontext = function () {
+                this._maincontext.resizecontext();
+            };
+            Object.defineProperty(Stage.prototype, "orientchanged", {
+                //获得轴向是否改变了
+                get: function () {
+                    return this._maincontext.checkorient();
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stage.prototype, "viewPort", {
+                //获得取景器
+                get: function () {
+                    return this._camera.viewsafe();
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stage.prototype, "camera", {
+                //获得镜头
+                get: function () {
+                    return this._camera;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Stage.prototype._transform = function () {
+                var wt = this._worldtransform;
+                wt.identity();
+                this._getMatrix(wt);
+                this.eachChilder(function (child) {
+                    child._transform();
+                });
+            };
+            Stage.prototype.isInViewPort = function () {
+                return true;
+                //nothing
+            };
+            Stage.prototype.addChild = function (child) {
+                if (child instanceof Stage)
+                    return; //todo:error log here;
+                _super.prototype.addChild.call(this, child);
+            };
+            Stage.ENTER_FRAME = "Stage_ENTER_FRAME";
+            Stage.ENTER_MILLSECOND10 = "Stage_ENTER_20MILLSECOND";
+            Stage.ENTER_SECOND = "Stage_ENTER_SECOND";
+            Stage.RESIZED = "Stage_RESIZED";
+            Stage.RESIZE = "Stage_RESIZE";
+            return Stage;
+        })(_canvas.DisplatObjectContainer);
+        _canvas.Stage = Stage;
     })(canvas = alcedo.canvas || (alcedo.canvas = {}));
 })(alcedo || (alcedo = {}));
 /**
@@ -4491,6 +4251,169 @@ var alcedo;
             return Particle;
         })();
         canvas.Particle = Particle;
+    })(canvas = alcedo.canvas || (alcedo.canvas = {}));
+})(alcedo || (alcedo = {}));
+/**
+ * Created by tommyZZM on 2015/4/24.
+ * 离子发射器
+ */
+var alcedo;
+(function (alcedo) {
+    var canvas;
+    (function (canvas) {
+        var ParticleEmitter = (function (_super) {
+            __extends(ParticleEmitter, _super);
+            /**
+             * @param initial
+             * @param opts
+             * @particleClass 粒子类
+             */
+            function ParticleEmitter(opts) {
+                if (opts === void 0) { opts = {}; }
+                _super.call(this);
+                //trace(opts)
+                this._particles = [];
+                this._particlespool = [];
+                this._currinitial = new canvas.Vector2D();
+                //this._forcemoment = new Vector2D();
+                this._force = new canvas.Vector2D();
+                this._shouldcreate = 0;
+                //frequency
+                this._initial = opts.initial ? opts.initial.clone() : new canvas.Vector2D();
+                this._spread = opts.spread || 0;
+                this._mass = opts.massrandom || 1;
+                this._massrandom = opts.massrandom || 0;
+                this._rate = opts.rate || 1;
+                this._max = opts.max || 1;
+                this._particleClass = opts.particleClass ? opts.particleClass : canvas.Particle;
+            }
+            ParticleEmitter.prototype._draw = function (renderer) {
+                var wt, partile;
+                for (var i = 0; i < this._particles.length; i++) {
+                    partile = this._particles[i];
+                    partile._stagetransform(this._stage);
+                    partile._transform();
+                    renderer.context.globalAlpha = partile.alpha * this._alpha;
+                    //trace(partile.alpha,this._alpha,partile.alpha*this._alpha);
+                    //partile.worldtransform = this._getMatrix(partile.worldtransform)
+                    renderer.setTransform(partile.worldtransform);
+                    partile._draw(renderer);
+                }
+            };
+            /**
+             * 创建一枚栗子
+             * @private
+             */
+            ParticleEmitter.prototype._createOneParticle = function () {
+                var _this = this;
+                var partile;
+                if (this._particlespool.length > 0) {
+                    partile = this._particlespool.pop();
+                }
+                else {
+                    partile = new this._particleClass();
+                }
+                this._ParticleInit(partile);
+                this._particles.push(partile);
+                partile.onDecay(function (particle) {
+                    _this._particles.fastRemove(_this._particles.indexOf(particle)); //you dian diao a
+                    _this._particlespool.push(particle);
+                }, this);
+            };
+            ParticleEmitter.prototype._ParticleInit = function (paricle) {
+                paricle.create(this.globalx, this.globaly);
+                this._currinitial.resetAs(this._initial);
+                if (this._spread) {
+                    var _randeg = Math.randomFrom(-1, 1) * this._spread / 2;
+                    var _curdeg = _randeg + this._initial.deg;
+                    this._currinitial.resetToDeg(_curdeg);
+                }
+                paricle.applyForce(this._currinitial);
+            };
+            ParticleEmitter.prototype._updateParticles = function (e) {
+                var partile;
+                for (var i = 0; i < this._particles.length; i++) {
+                    partile = this._particles[i];
+                    this._updateOneParticle(partile);
+                    partile.update(e);
+                }
+                //if(this._forcemoment.length>0){
+                //    this._forcemoment.reset();
+                //}
+                this._shouldcreate += (this._rate / 100);
+                var delay = (this._shouldcreate) ^ 0;
+                if (this._shouldcreate > 1)
+                    this._shouldcreate = 0;
+                //trace(delay,this._particles.length,this._max);
+                if (delay < 1 || this._particles.length >= this._max)
+                    return;
+                for (var i = 0; i < delay; i++) {
+                    //TODO:当i>1时说明错过了上次创建粒子的时机
+                    this._createOneParticle();
+                }
+            };
+            /**
+             * 更新一枚栗子
+             * @param partile
+             * @private
+             */
+            ParticleEmitter.prototype._updateOneParticle = function (partile) {
+                partile.applyForce(this._force);
+                //if(this._forcemoment.length>0){
+                //    partile.applyForce(this._forcemoment);
+                //}
+            };
+            //private _forcemoment:Vector2D;
+            ParticleEmitter.prototype.applyForce = function (force) {
+                this._force.add(force);
+            };
+            Object.defineProperty(ParticleEmitter.prototype, "initialdegree", {
+                set: function (drgee) {
+                    this._initial.resetToDeg(drgee);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            /**
+             * 发射器开关控制系统
+             * @private
+             */
+            ParticleEmitter.prototype._onAdd = function () {
+                _super.prototype._onAdd.call(this);
+                if (this.isAddtoStage()) {
+                    this.setPlayState(this._playstatetmp);
+                }
+            };
+            ParticleEmitter.prototype.play = function () {
+                this.setPlayState(true);
+            };
+            ParticleEmitter.prototype.stop = function () {
+                this.setPlayState(false);
+            };
+            ParticleEmitter.prototype.setPlayState = function (value) {
+                //trace(this._playstate , value)
+                if (this._playstate == value) {
+                    return;
+                }
+                if (!this.isAddtoStage()) {
+                    this._playstatetmp = value;
+                    trace("'[dev particle]!this.isAddtoStage()");
+                    return;
+                }
+                this._playstate = value;
+                if (value) {
+                    this._stage.addEventListener(canvas.Stage.ENTER_MILLSECOND10, this._updateParticles, this);
+                }
+                else {
+                    this._stage.removeEventListener(canvas.Stage.ENTER_MILLSECOND10, this._updateParticles, this);
+                }
+            };
+            ParticleEmitter.prototype.dispose = function () {
+                //todo:释放粒子发射器
+            };
+            return ParticleEmitter;
+        })(canvas.DisplayObject);
+        canvas.ParticleEmitter = ParticleEmitter;
     })(canvas = alcedo.canvas || (alcedo.canvas = {}));
 })(alcedo || (alcedo = {}));
 /**
@@ -5052,6 +4975,67 @@ var alcedo;
     })(canvas = alcedo.canvas || (alcedo.canvas = {}));
 })(alcedo || (alcedo = {}));
 /**
+ * Created by tommyZZM on 2015/4/6.
+ */
+var alcedo;
+(function (alcedo) {
+    var dom;
+    (function (dom) {
+        function width() {
+            var result;
+            if (document.documentElement.clientWidth) {
+                result = document.documentElement.clientWidth;
+            }
+            else {
+                result = window.innerWidth;
+            }
+            return result;
+        }
+        dom.width = width;
+        function height() {
+            var result;
+            if (document.documentElement.clientHeight) {
+                result = document.documentElement.clientHeight;
+            }
+            else {
+                result = window.innerHeight;
+            }
+            return result;
+        }
+        dom.height = height;
+        function w2h() {
+            return width() / height();
+        }
+        dom.w2h = w2h;
+        var navigator;
+        if (!navigator) {
+            navigator = { userAgent: "commonJS" };
+        }
+        dom.ua = navigator.userAgent.toLowerCase();
+        function device() {
+            if (/iphone|ipad|ipod/i.test(dom.ua)) {
+                return 2 /* IOS */;
+            }
+            if (/android/i.test(dom.ua)) {
+                return 1 /* Android */;
+            }
+            if (/windows/i.test(dom.ua) && /phone/i.test(dom.ua)) {
+                return 3 /* WinPhone */;
+            }
+            return 0 /* PC */;
+        }
+        dom.device = device;
+        (function (DeviceType) {
+            DeviceType[DeviceType["Android"] = 1] = "Android";
+            DeviceType[DeviceType["IOS"] = 2] = "IOS";
+            DeviceType[DeviceType["WinPhone"] = 3] = "WinPhone";
+            DeviceType[DeviceType["PC"] = 0] = "PC";
+            DeviceType[DeviceType["Other"] = -1] = "Other";
+        })(dom.DeviceType || (dom.DeviceType = {}));
+        var DeviceType = dom.DeviceType;
+    })(dom = alcedo.dom || (alcedo.dom = {}));
+})(alcedo || (alcedo = {}));
+/**
  * Created by tommyZZM on 2015/4/13.
  */
 var alcedo;
@@ -5447,12 +5431,3 @@ var alcedo;
         net.AsyncAssetsLoader = AsyncAssetsLoader;
     })(net = alcedo.net || (alcedo.net = {}));
 })(alcedo || (alcedo = {}));
-/**
- * Created by tommyZZM on 2015/4/13.
- */
-// 当开启GPU渲染时，Chrome的canvas绘制会锁定在30帧（不接电源的时候是这样。）
-// 加入要打包成原生应用，首选考虑工具CocoonJS
-// Dom元素操作尽量通过add Class操作
-//
-//
-//
