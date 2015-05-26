@@ -19,7 +19,7 @@ module game{
 
             //初始化GameStage
             this.stage = new alcedo.canvas.Stage(dom.query("#colorjet")[0],640,480,{
-                background:"#8edced",
+                background:"#36dbf8",
                 profiler:true,
                 orient:true,
                 ui:"colorjet-ui"

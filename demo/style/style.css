@@ -49,6 +49,7 @@ canvas{
     position: relative;
 }
 
+/**.screen.over**/
 .screen.over .btns{
     position: relative;
     width: 250px;
@@ -60,3 +61,16 @@ canvas{
     margin-left: 50px;
 }
 
+/**.screen.playing**/
+.screen.playing .score{
+    position: relative;
+    height: 0;
+}
+
+.screen.playing .score .text{
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    margin-top: -11px;
+    -webkit-transform: scale(0.46);
+}

@@ -37,7 +37,6 @@ module game{
         private cmdOver(e){
             this._isplaying = false;
             trace("cmdOver")
-            alcedo.core(GUICycler).toggleToScreen("over");
             this.dispatchDemand(GameState.OVER,e);
         }
 

@@ -206,7 +206,7 @@ var game;
         MainCycler.prototype.cmdStartup = function () {
             //初始化GameStage
             this.stage = new alcedo.canvas.Stage(game.dom.query("#colorjet")[0], 640, 480, {
-                background: "#8edced",
+                background: "#36dbf8",
                 profiler: true,
                 orient: true,
                 ui: "colorjet-ui"
@@ -395,7 +395,6 @@ var game;
         GameState.prototype.cmdOver = function (e) {
             this._isplaying = false;
             trace("cmdOver");
-            alcedo.core(game.GUICycler).toggleToScreen("over");
             this.dispatchDemand(GameState.OVER, e);
         };
         Object.defineProperty(GameState.prototype, "isplaying", {
@@ -539,13 +538,25 @@ var game;
         function PlayingScreen() {
             _super.apply(this, arguments);
         }
+        PlayingScreen.prototype.startUp = function () {
+            this._score = new game.ScoreLabel(this._ele.find(".score")[0]);
+            this._score.ele.css({ top: alcedo.px(-100) });
+        };
         PlayingScreen.prototype.show = function () {
             trace("play screen show");
             game.stage.addEventListener(game.canvas.TouchEvent.TOUCH_BEGIN, this.ontapBegin, this);
             game.stage.addEventListener(game.canvas.TouchEvent.TOUCH_END, this.ontapEnd, this);
+            TweenMax.to(this._score.ele.node, 0.5, { delay: 2, top: 0 });
         };
         PlayingScreen.prototype.hide = function (callback) {
-            callback();
+            var _this = this;
+            TweenMax.to(this._score.ele.node, 0.5, { top: alcedo.px(-100), onComplete: function () {
+                game.stage.removeEventListener(game.canvas.TouchEvent.TOUCH_BEGIN, _this.ontapBegin, _this);
+                game.stage.removeEventListener(game.canvas.TouchEvent.TOUCH_END, _this.ontapEnd, _this);
+                if (callback)
+                    callback();
+                trace("here");
+            } });
         };
         PlayingScreen.prototype.ontapBegin = function () {
             //trace("hi");
@@ -1519,6 +1530,7 @@ var game;
             this._myplane.applyMomentForce(new game.canvas.Vector2D(10, -12));
         };
         PlayGround.prototype.resOver = function () {
+            alcedo.core(game.GUICycler).toggleToScreen("over");
             alcedo.core(game.LevelManager).stop();
         };
         return PlayGround;
@@ -1564,4 +1576,31 @@ var game;
         return GUIButton;
     })();
     game.GUIButton = GUIButton;
+})(game || (game = {}));
+/**
+ * Created by tommyZZM on 2015/5/26.
+ */
+var game;
+(function (game) {
+    var ScoreLabel = (function () {
+        function ScoreLabel(ele) {
+            this._ele = ele;
+            this._text = this._ele.find(".text")[0];
+        }
+        Object.defineProperty(ScoreLabel.prototype, "ele", {
+            get: function () {
+                return this._ele;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ScoreLabel.prototype, "score", {
+            set: function (num) {
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return ScoreLabel;
+    })();
+    game.ScoreLabel = ScoreLabel;
 })(game || (game = {}));

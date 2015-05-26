@@ -79,6 +79,7 @@ module game {
         }
 
         private resOver(){
+            alcedo.core(GUICycler).toggleToScreen("over");
             alcedo.core(LevelManager).stop();
         }
     }
