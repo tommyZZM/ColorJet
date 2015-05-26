@@ -54,7 +54,7 @@ module game {
             this._myplane.clearForce();
             this._myplane.velocity.reset();
             this._myplane.x = 30;
-            this._myplane.y = screen.height-50;
+            this._myplane.y = stage.height-50;
             this._myplane.applyMomentForce(new canvas.Vector2D(5,-5));
             alcedo.core(GameControl).enableAutoControl();
             alcedo.core(LevelManager).reset();

@@ -450,6 +450,33 @@ var game;
     game.CurtainManager = CurtainManager;
 })(game || (game = {}));
 /**
+ * Created by tommyZZM on 2015/5/26.
+ */
+var game;
+(function (game) {
+    var ScoreLabel = (function () {
+        function ScoreLabel(ele) {
+            this._ele = ele;
+            this._text = this._ele.find(".text")[0];
+        }
+        Object.defineProperty(ScoreLabel.prototype, "ele", {
+            get: function () {
+                return this._ele;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ScoreLabel.prototype, "score", {
+            set: function (num) {
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return ScoreLabel;
+    })();
+    game.ScoreLabel = ScoreLabel;
+})(game || (game = {}));
+/**
  * Created by tommyZZM on 2015/5/18.
  */
 var game;
@@ -1509,7 +1536,7 @@ var game;
             this._myplane.clearForce();
             this._myplane.velocity.reset();
             this._myplane.x = 30;
-            this._myplane.y = game.screen.height - 50;
+            this._myplane.y = game.stage.height - 50;
             this._myplane.applyMomentForce(new game.canvas.Vector2D(5, -5));
             alcedo.core(game.GameControl).enableAutoControl();
             alcedo.core(game.LevelManager).reset();
@@ -1576,31 +1603,4 @@ var game;
         return GUIButton;
     })();
     game.GUIButton = GUIButton;
-})(game || (game = {}));
-/**
- * Created by tommyZZM on 2015/5/26.
- */
-var game;
-(function (game) {
-    var ScoreLabel = (function () {
-        function ScoreLabel(ele) {
-            this._ele = ele;
-            this._text = this._ele.find(".text")[0];
-        }
-        Object.defineProperty(ScoreLabel.prototype, "ele", {
-            get: function () {
-                return this._ele;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ScoreLabel.prototype, "score", {
-            set: function (num) {
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return ScoreLabel;
-    })();
-    game.ScoreLabel = ScoreLabel;
 })(game || (game = {}));

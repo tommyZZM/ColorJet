@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "alcedo": "file:..\\Alcedo",
+    "alcedo": "https://github.com/tommyZZM/Alcedo",
     "gulp": "^3.8.11"
   }
 }
