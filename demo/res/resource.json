@@ -17,7 +17,7 @@
 		"name":"fgcloud"
 	},
 	{
-		"keys":"smallalcedo_png,smallalcedo_json",
+		"keys":"smallalcedo_png,smallalcedo_json,darkcloud",
 		"name":"character"
 	}],
 	"resources":[
@@ -120,5 +120,10 @@
 		"name":"level_tmp_3",
 		"type":"json",
 		"url":"map/level_tmp_3.json"
+	},
+	{
+		"name":"darkcloud",
+		"type":"image",
+		"url":"game/darkcloud.png"
 	}]
 }
