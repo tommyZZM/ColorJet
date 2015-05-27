@@ -16,7 +16,7 @@ module game{
         protected cmdStartup(){
 
             //初始化GameStage
-            this.stage = new alcedo.canvas.Stage(dom.query("#colorjet")[0],640,480,{
+            this.stage = new alcedo.canvas.Stage(dom.query("#colorjet")[0],480,320,{
                 background:"#5fe4fc",
                 profiler:true,
                 orient:true,

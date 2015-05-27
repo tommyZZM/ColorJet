@@ -74,7 +74,7 @@ module game{
 
             this.pivotX = 0.5;
             this.pivotY = 0.5;
-            this.scaleALL(0.5);
+            this.scaleALL(0.3);
 
             this.width = this.bird.width;
             this.height = this.bird.height;

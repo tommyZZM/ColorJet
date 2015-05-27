@@ -61,6 +61,7 @@ module game {
                         this._root.addChild(level);
                         this._activelevels.push(level);
                     }
+                    level.y = -100;
                     level.render();
                 }
 

@@ -45,6 +45,7 @@ module game {
                 }
             }
 
+            //return;[是否渲染彩色能量]
             var colourpowerdata = this._levelconfig.objects.colourpower;
             if(Array.isArray(colourpowerdata)){
                 for(var i=0;i<colourpowerdata.length;i++){

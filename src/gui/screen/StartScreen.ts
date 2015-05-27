@@ -33,6 +33,9 @@ module game{
         }
 
         public show(callback){
+            dom.query("#github")[0].show().css({opacity:0});
+            TweenMax.to(dom.query("#github")[0].node,0.39,{opacity:1});
+
             var titletop = screen.height/2-(alcedo.toValue(this._title.attr("height"))*1.3);
             //trace(screen.height/2,alcedo.toValue(this._title.attr("height")))
 
@@ -48,9 +51,12 @@ module game{
         }
 
         public hide(callback){
+            TweenMax.to(dom.query("#github")[0].node,0.39,{opacity:0});
+
             TweenMax.to(this._title.node,0.3,{top:-100,delay:0.1});
             TweenMax.to(this._startbtn.node,0.5,{top:100+screen.height,delay:0.3,onComplete:()=>{
                 stage.removeEventListener(canvas.Stage.RESIZED,this.onresize,this);
+                dom.query("#github")[0].hide();
                 if(callback)callback();
             },ease:Back.easeIn.config(2)});
             TweenMax.to(this._aboutbtn.node,0.5,{top:100+screen.width,delay:0.2,ease:Back.easeIn.config(2)});
