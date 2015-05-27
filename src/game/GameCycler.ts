@@ -15,7 +15,7 @@ module game{
             alcedo.core(CameraManager).startUp();
             alcedo.core(ParallaxManager).startUp();
             alcedo.core(WorldManager).startUp();
-            alcedo.core(TimeTickManager).startUp();
+            alcedo.core(ColourTransformManager).startUp();
 
             this._backGround = new BackGround();
             this._playGround = new PlayGround();
@@ -27,6 +27,7 @@ module game{
             stage.addChild(this._frontGround);
 
             alcedo.core(GameState).startUp();
+            alcedo.core(GameRule).startUp(this._playGround.bird);
 
             alcedo.dispatchCmd(GameState,GameState.HELLO);
             alcedo.core(GUICycler).toggleToScreen("start");

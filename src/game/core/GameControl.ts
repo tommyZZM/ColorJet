@@ -16,7 +16,10 @@ module game{
             this._plane = plane;
             this._plane.addEventListener(Entity.ON_UPDATE,this.eachTime,this);
 
-            this.addCmdHandler(GameControl.CTR_FLY_BEGIN,this.beginfly);
+            this.addCmdHandler(GameControl.CTR_FLY_BEGIN,()=>{
+                if(!alcedo.core(GameState).isplaying)return;
+                this.beginfly();
+            });
             this.addCmdHandler(GameControl.CTR_FLY_RELEASE,this.endfly);
         }
 

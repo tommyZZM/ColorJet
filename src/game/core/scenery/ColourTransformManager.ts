@@ -3,7 +3,7 @@
  */
 module game {
 
-    export class TimeTickManager extends alcedo.AppSubCore {
+    export class ColourTransformManager extends alcedo.AppSubCore {
         private _testdomdiv:dom.DomElement;
         public birdsmokecolour:string;
 

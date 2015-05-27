@@ -47,5 +47,9 @@ module game{
             screenobj.ele = screenele;
             this.screenDict.set(name,screenobj);
         }
+
+        public getScreen(name):any{
+            return this.screenDict.get(name);
+        }
     }
 }

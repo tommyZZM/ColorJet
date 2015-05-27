@@ -13,7 +13,7 @@ module game{
 
         protected _force:alcedo.canvas.Vector2D;
 
-        protected _body:sat.Polygon;
+        protected _body:sat.Polygon|sat.Circle;
 
         protected _mass:number = 1;
 
@@ -36,7 +36,9 @@ module game{
             if(this._body instanceof sat.Polygon){
                 this._body["offset"].x = -this.display.pivotOffsetX*this.display.scaleX;
                 this._body["offset"].y = -this.display.pivotOffsetY*this.display.scaleY;
-                this._body.setAngle(this.display.rotation * alcedo.Constant.DEG_TO_RAD);
+                (<any>this._body).setAngle(this.display.rotation * alcedo.Constant.DEG_TO_RAD);
+            }else if(this._body instanceof sat.Circle){
+
             }
         }
 
@@ -104,7 +106,7 @@ module game{
             return this.display.actualBound().right
         }
 
-        public get body(){
+        public get body():any{
             return this._body;
         }
     }

@@ -71,6 +71,6 @@ canvas{
     position: absolute;
     width: 100%;
     text-align: center;
-    margin-top: -11px;
+    margin-top: -10px;
     -webkit-transform: scale(0.46);
 }

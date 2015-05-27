@@ -1,7 +1,5 @@
 /**
  * Created by tommyZZM on 2015/5/17.
- * 重构指南
- * 所有界面组件动画能够用CSS实现就尽量用CSS
  *
  */
 module game{
@@ -19,7 +17,7 @@ module game{
 
             //初始化GameStage
             this.stage = new alcedo.canvas.Stage(dom.query("#colorjet")[0],640,480,{
-                background:"#36dbf8",
+                background:"#5fe4fc",
                 profiler:true,
                 orient:true,
                 ui:"colorjet-ui"

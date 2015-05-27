@@ -2,9 +2,9 @@
  * Created by tommyZZM on 2015/5/27.
  */
 module game{
-    export class SmokeParticle extends canvas.Particle{
+    export class SmokeParticle extends alcedo.canvas.Particle{
         protected oncreate(x:number,y:number,mass:number=1){
-            this._colour = alcedo.core(TimeTickManager).birdsmokecolour;
+            this._colour = alcedo.core(ColourTransformManager).birdsmokecolour;
             this.alpha = 0;
         }
 

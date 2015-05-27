@@ -9,6 +9,8 @@ module game {
         public startUp(){
             this._score = new game.ScoreLabel(this._ele.find(".score")[0])
             this._score.ele.css({top:alcedo.px(-100)});
+
+            this._score.score = 0;
         }
 
         public show(){
@@ -19,11 +21,12 @@ module game {
         }
 
         public hide(callback){
+            trace("play screen hide");
             TweenMax.to(this._score.ele.node,0.5,{top:alcedo.px(-100),onComplete:()=>{
                 stage.removeEventListener(canvas.TouchEvent.TOUCH_BEGIN,this.ontapBegin,this);
                 stage.removeEventListener(canvas.TouchEvent.TOUCH_END,this.ontapEnd,this);
                 if(callback)callback();
-                trace("here");
+                //trace("here");
             }});
         }
 
@@ -34,6 +37,10 @@ module game {
 
         private ontapEnd(){
             alcedo.dispatchCmd(GameControl,GameControl.CTR_FLY_RELEASE)
+        }
+
+        public setScore(score:number){
+            this._score.score = score;
         }
     }
 }

@@ -5,13 +5,13 @@ module game {
     export class ColourPower extends Entity {
         public velocitystatic = true;
 
+        public haseaten:boolean;
+
         public constructor(){
             super();
-            this._display = new canvas.graphic.Circle(10,"#e67e22");
-        }
-
-        public set fillColour(c:string){
-            (<canvas.graphic.Circle>this._display).fillcolour = c;
+            //TODO:∂‘œÛ≥ÿ
+            this._display = new canvas.graphic.Circle(10,alcedo.core(ColourTransformManager).birdsmokecolour);
+            this._body = new SAT.Circle(new SAT.Vector(0,0),10);
         }
     }
 }

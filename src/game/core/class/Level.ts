@@ -30,7 +30,7 @@ module game {
         private _clouds:Array<any>;
         private _powers:Array<any>;
         public render(){
-            trace(this._levelconfig)
+            //trace(this._levelconfig)
 
             var i=0;
             var cloudsdata = this._levelconfig.objects.obstacle_darkcloud;

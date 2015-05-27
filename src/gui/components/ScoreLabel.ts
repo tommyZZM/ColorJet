@@ -6,12 +6,15 @@ module game{
         private _ele:dom.DomElement;
 
         private _text:dom.DomElement;
+        private _letters:Array<any>;
 
         public constructor(ele){
 
             this._ele = ele;
 
             this._text = this._ele.find(".text")[0];
+
+            this._letters = this._text.find(".letter")
         }
 
         public get ele():dom.DomElement{
@@ -19,7 +22,19 @@ module game{
         }
 
         public set score(num:number){
+            var str = num+"";
 
+            this._text.hide();
+            this._text.node.innerHTML = "";//removeChildren
+
+            for(var i=0;i<str.length;i++){
+                var letter = this._letters[i];
+                if(!letter)continue;
+                letter.node.className = "letter num"+str[i];
+                this._text.appendChild(letter);
+            }
+
+            this._text.show();
         }
     }
 }

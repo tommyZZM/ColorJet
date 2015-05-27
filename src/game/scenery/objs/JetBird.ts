@@ -5,50 +5,52 @@ module game{
 
     export class JetBird extends Entity{
 
-        private _bodybox:sat.Box;
+        //private _bodybox:sat.Box;
 
         public constructor(){
             super(new JetBirdSkin());
-            this._bodybox = new sat.Box(new sat.Vector(0,0),(this.display.width-42)*this.display.scaleX
-                ,this.display.height*this.display.scaleY);
-            this._body = this._bodybox.toPolygon();
+            //this._bodybox = new sat.Box(new sat.Vector(0,0),(this.display.width-42)*this.display.scaleX
+            //    ,this.display.height*this.display.scaleY);
+            //this._body = this._bodybox.toPolygon();
+            this._body = new sat.Circle(new sat.Vector(0,0),(this.display.height*this.display.scaleY)/1.9);
 
             //this.debugBody();
         }
 
         private debugBody(){
-            if(!alcedo.core(GameCycler).debug)return;
-            var debug = new canvas.graphic.Rectangle(this._bodybox.w/this.display.scaleX
-                ,this._bodybox.h/this.display.scaleY,"#e74c3c");
-            //debug.pivotX = debug.pivotY = 0.5;
-            debug.alpha = 0.3;
+            var debug = new canvas.graphic.Circle(this._body["r"],"#e74c3c");
+            debug.alpha = 0.6;
+            debug.x = this.display.width*this.display.pivotX;
+            debug.y = this.display.height*this.display.pivotY;
             (<any>this.display).addChild(debug);
-
-            var boxbound:any = new canvas.DisplayGraphic();
-            boxbound._graphicfn = (ctx)=>{
-                ctx.beginPath();
-                for(var i=0;i<this.body.edges.length;i++){
-                    var next = i+1;
-                    if(next==this.body.edges.length)next =0;
-                    drawLineFromTo(ctx,{x:this.body.edges[i].x+this.body.pos.x
-                            ,y:this.body.edges[i].y+this.body.pos.y}
-                        ,{x:this.body.edges[next].x+this.body.pos.x
-                            ,y:this.body.edges[next].y+this.body.pos.y})
-                }
-
-                ctx.stroke();
-                ctx.lineWidth=1;
-                ctx.strokeStyle='#8e44ad';
-            };
-            boxbound.alpha=0.66;
-            function drawLineFromTo(ctx,point:canvas.Ixy,point2:canvas.Ixy){
-                ctx.moveTo(point.x,point.y);
-                ctx.lineTo(point2.x,point2.y);
-            }
-
-            //this.display.addEventListener(canvas.DisplayObjectEvent.ON_ADD_TO_STAGE,()=>{
-            //    (<any>this.display).root.addChild(boxbound)
-            //},this)
+            //if(!alcedo.core(GameCycler).debug)return;
+            //var debug = new canvas.graphic.Rectangle(this._bodybox.w/this.display.scaleX
+            //    ,this._bodybox.h/this.display.scaleY,"#e74c3c");
+            ////debug.pivotX = debug.pivotY = 0.5;
+            //debug.alpha = 0.3;
+            //(<any>this.display).addChild(debug);
+            //
+            //var boxbound:any = new canvas.DisplayGraphic();
+            //boxbound._graphicfn = (ctx)=>{
+            //    ctx.beginPath();
+            //    for(var i=0;i<this.body.edges.length;i++){
+            //        var next = i+1;
+            //        if(next==this.body.edges.length)next =0;
+            //        drawLineFromTo(ctx,{x:this.body.edges[i].x+this.body.pos.x
+            //                ,y:this.body.edges[i].y+this.body.pos.y}
+            //            ,{x:this.body.edges[next].x+this.body.pos.x
+            //                ,y:this.body.edges[next].y+this.body.pos.y})
+            //    }
+            //
+            //    ctx.stroke();
+            //    ctx.lineWidth=1;
+            //    ctx.strokeStyle='#8e44ad';
+            //};
+            //boxbound.alpha=0.66;
+            //function drawLineFromTo(ctx,point:canvas.Ixy,point2:canvas.Ixy){
+            //    ctx.moveTo(point.x,point.y);
+            //    ctx.lineTo(point2.x,point2.y);
+            //}
         }
     }
 

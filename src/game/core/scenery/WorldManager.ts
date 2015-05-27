@@ -59,7 +59,7 @@ module game{
 
                 if(entitie instanceof JetBird){
                     this._testbird = entitie;
-                }else if(entitie instanceof Cloud){
+                }else if(entitie instanceof Cloud || entitie instanceof ColourPower){
                     var globalx = entitie.display.globalx;
                     //trace(globalx);
                     if(globalx<stage.viewPort.right && globalx>stage.viewPort.x){
@@ -81,12 +81,20 @@ module game{
                     //trace(entitie.hashIndex,entitie.body.pos.x,entitie.body);
                     //trace(entitie.body,entitie.body.pos.x,this._testbird.x);
                     //this._resoponse.clear();
-                    if(SAT.testPolygonPolygon(this._testbird.body,entitie.body)){
-                        //trace(this.resoponse,this.resoponse.bInA,this.resoponse.aInB)
+                    if(SAT.testCirclePolygon(<any>this._testbird.body,entitie.body)){
+                        alcedo.dispatchCmd(GameRule,GameRule.HIT_CLOUD,{target:entitie});
                         entitie.active();
                         //trace("hit");
                     }else{
                         entitie.disactive();
+                    }
+                }
+
+                if(entitie instanceof ColourPower){
+                    if(SAT.testCircleCircle(<any>this._testbird.body,entitie.body)){
+                        if(!entitie.haseaten){
+                            alcedo.dispatchCmd(GameRule,GameRule.HIT_COLOUR,{target:entitie});
+                        }
                     }
                 }
             }
