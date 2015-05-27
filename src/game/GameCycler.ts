@@ -15,6 +15,7 @@ module game{
             alcedo.core(CameraManager).startUp();
             alcedo.core(ParallaxManager).startUp();
             alcedo.core(WorldManager).startUp();
+            alcedo.core(TimeTickManager).startUp();
 
             this._backGround = new BackGround();
             this._playGround = new PlayGround();
