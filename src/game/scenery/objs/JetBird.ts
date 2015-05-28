@@ -81,10 +81,10 @@ module game{
 
             trace(this.bird.width,this.bird.height);
 
-            this._smoke =  new alcedo.canvas.ParticleEmitter({spread:6,max:60,rate:20,particleClass:SmokeParticle});
+            this._smoke =  new alcedo.canvas.ParticleEmitter({spread:6,max:60,rate:12,particleClass:SmokeParticle});
             this._smoke.play();
 
-            this._smokepos = new alcedo.canvas.Vector2D(0.2,0.16);
+            this._smokepos = new alcedo.canvas.Vector2D(0.5,0.16);
 
             var pos:any = this.bird.localToGlobal(this.width*this._smokepos.x
                 ,this.height*this._smokepos.y);//

@@ -72,5 +72,28 @@ canvas{
     width: 100%;
     text-align: center;
     margin-top: -10px;
-    -webkit-transform: scale(0.46);
+    -webkit-transform: scale3d(0.46,0.46,1);
+}
+
+/** screen.about **/
+.screen.about .dialog{
+    position: absolute;
+    width: inherit;
+}
+.screen.about .dialog *{
+    position: relative;
+}
+
+.screen.about .dialog .content .text{
+    font-family:Microsoft Yahei,sans-serif;
+    padding: 0 60px;
+    padding-top: 20px;
+    text-align: center;
+
+    color: #4c4c4c;
+    line-height: 1.4;
+    font-size: 14px;
+}
+.screen.about .dialog .content .text p{
+    margin: 0;
 }

@@ -6,6 +6,8 @@ module game{
         protected oncreate(x:number,y:number,mass:number=1){
             this._colour = alcedo.core(ColourTransformManager).birdsmokecolour;
             this.alpha = 0;
+            this.scale.x=0.2;
+            this.scale.y=0.2;
         }
 
         private _colour:string;

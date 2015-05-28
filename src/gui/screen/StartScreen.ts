@@ -18,6 +18,7 @@ module game{
             this._aboutbtn.ele.css({top:100+screen.width});
 
             this._startbtn.ele.addEventListener(dom.TouchEvent.TOUCH_TAP,this.onstart,this);
+            this._aboutbtn.ele.addEventListener(dom.TouchEvent.TOUCH_TAP,this.onabout,this);
         }
 
         private onstart(){
@@ -32,8 +33,13 @@ module game{
 
         }
 
+        private onabout(){
+            alcedo.core(GUICycler).toggleToScreen("about");
+        }
+
         public show(callback){
-            dom.query("#github")[0].show().css({opacity:0});
+            dom.query("#github")[0].show()
+            //dom.query("#github")[0].show().css({opacity:0});
             TweenMax.to(dom.query("#github")[0].node,0.39,{opacity:1});
 
             var titletop = screen.height/2-(alcedo.toValue(this._title.attr("height"))*1.3);

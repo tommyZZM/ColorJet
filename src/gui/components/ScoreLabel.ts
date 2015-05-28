@@ -14,7 +14,10 @@ module game{
 
             this._text = this._ele.find(".text")[0];
 
-            this._letters = this._text.find(".letter")
+            this._letters = [];
+            for(var i=0;i<7;i++){
+                this._letters.push(dom.query("<div></div>")[0]);
+            }
         }
 
         public get ele():dom.DomElement{

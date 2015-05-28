@@ -14,6 +14,8 @@ module game{
             this.registScreen("playing",new PlayingScreen());
             this.registScreen("over",new OverScreen());
 
+            this.registScreen("about",new AboutScreen());
+
             this.toggleToScreen("loading");
         }
 

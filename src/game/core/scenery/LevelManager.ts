@@ -6,7 +6,7 @@ module game {
      * 游戏关卡,地图管理器...
      */
     var CHECK_DELAY:number = 3;
-    var MAX_LEVE_COUNT:number = 3;
+    var MAX_LEVE_COUNT:number = 2;
 
     export class LevelManager extends alcedo.AppSubCore {
 
@@ -75,10 +75,10 @@ module game {
                 }
             }
 
-            this._checkdelay++;
-            if(this._checkdelay>CHECK_DELAY){
-                this._checkdelay = 0;
-            }
+            //this._checkdelay++;
+            //if(this._checkdelay>CHECK_DELAY){
+            //    this._checkdelay = 0;
+            //}
         }
 
         private _runstate:boolean;
