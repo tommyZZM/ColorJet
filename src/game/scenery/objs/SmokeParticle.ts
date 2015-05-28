@@ -6,8 +6,7 @@ module game{
         protected oncreate(x:number,y:number,mass:number=1){
             this._colour = alcedo.core(ColourTransformManager).birdsmokecolour;
             this.alpha = 0;
-            this.scale.x=0.2;
-            this.scale.y=0.2;
+            this.scale.reset(0.6,0.2);
         }
 
         private _colour:string;
@@ -22,13 +21,11 @@ module game{
         protected prebron():boolean{
             this.scale.x+=0.05;
             this.scale.y+=0.05;
-            if(this.scale.x>2){
-                this.scale.x = 2;
-                this.scale.y = 2;
-                return true;
-            }
             if(this.alpha<1){
                 this.alpha+=0.1;
+            }else{
+                this.alpha=1;
+                return true;
             }
         }
 

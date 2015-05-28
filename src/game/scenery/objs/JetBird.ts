@@ -81,7 +81,7 @@ module game{
 
             trace(this.bird.width,this.bird.height);
 
-            this._smoke =  new alcedo.canvas.ParticleEmitter({spread:6,max:50,rate:20,particleClass:SmokeParticle});
+            this._smoke =  new alcedo.canvas.ParticleEmitter({spread:6,max:30,rate:15,particleClass:SmokeParticle});
             this._smoke.play();
 
             this._smokepos = new alcedo.canvas.Vector2D(0.5,0.16);
