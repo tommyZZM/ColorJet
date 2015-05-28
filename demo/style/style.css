@@ -1,0 +1,99 @@
+*{
+
+}
+
+body,html{
+    margin: 0;
+    height:100%;
+    border: 0
+}
+
+canvas{
+    display: block;
+    border: none;
+    outline: none;
+}
+
+.alcedo-canvas-container{
+    width: 100%;
+    height: inherit;
+    position: relative;
+    display: block;
+}
+
+.screen,
+#curtain{
+    width: 100%;
+    position: absolute;
+}
+
+.screen{
+    display: none;
+}
+.screen.active{
+    display: block;
+}
+
+.screen .btn{
+    display: inline-block;
+}
+
+.block-center{
+    display: block;
+    margin: 0 auto;
+}
+
+/**.screen.start**/
+.screen.start *{
+    display: block;
+    position: relative;
+}
+
+/**.screen.over**/
+.screen.over .btns{
+    position: relative;
+    width: 250px;
+}
+.screen.over .btn{
+    position: relative;
+}
+.screen.over .btn.right{
+    margin-left: 50px;
+}
+
+/**.screen.playing**/
+.screen.playing .score{
+    position: relative;
+    height: 0;
+}
+
+.screen.playing .score .text{
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    margin-top: -10px;
+    -webkit-transform: scale3d(0.46,0.46,1);
+}
+
+/** screen.about **/
+.screen.about .dialog{
+    position: absolute;
+    width: inherit;
+}
+.screen.about .dialog *{
+    position: relative;
+}
+
+.screen.about .dialog .content .text{
+    font-family:Microsoft Yahei,sans-serif;
+    padding: 0 60px;
+    padding-top: 20px;
+    text-align: center;
+
+    color: #4c4c4c;
+    line-height: 1.4;
+    font-size: 14px;
+}
+.screen.about .dialog .content .text p{
+    margin: 0;
+}

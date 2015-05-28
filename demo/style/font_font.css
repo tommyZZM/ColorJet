@@ -1,0 +1,83 @@
+.letter {
+	margin-left:1px;
+	background-repeat:no-repeat;
+	display: inline-block;
+	overflow:hidden;
+	background-image: url(font_font.png);
+
+	border: 0;
+	font: 0/0 a;
+	text-shadow: none;
+	color: transparent;
+	background-color: transparent;
+}
+/*   1   */
+.letter.num1 {
+	background-position: -0px -110px;
+	/*margin-top:26px;*/
+	width: 15px; height: 52px;
+}
+
+/*   2   */
+.letter.num2 {
+	background-position: -0px -0px;
+	/*margin-top:26px;*/
+	width: 44px; height: 52px;
+}
+
+/*   3   */
+.letter.num3 {
+	background-position: -76px -108px;
+	/*margin-top:26px;*/
+	width: 28px; height: 54px;
+}
+
+/*   4   */
+.letter.num4 {
+	background-position: -0px -52px;
+	margin-top:-2px;
+	width: 43px; height: 58px;
+}
+
+/*   5   */
+.letter.num5 {
+	background-position: -43px -107px;
+	margin-top:1px;
+	width: 33px; height: 55px;
+}
+
+/*   6   */
+.letter.num6 {
+	background-position: -117px -56px;
+	margin-top:-1px;
+	width: 33px; height: 56px;
+}
+
+/*   7   */
+.letter.num7 {
+	background-position: -80px -52px;
+	/*margin-top:24px;*/
+	width: 37px; height: 56px;
+}
+
+/*   8   */
+.letter.num8 {
+	background-position: -43px -52px;
+	margin-top:-1px;
+	width: 37px; height: 55px;
+}
+
+/*   9   */
+.letter.num9 {
+	background-position: -117px -0px;
+	/*margin-top:24px;*/
+	width: 33px; height: 56px;
+}
+
+/*   0   */
+.letter.num0 {
+	background-position: -44px -0px;
+	margin-top:3px;
+	width: 37px; height: 52px;
+}
+
