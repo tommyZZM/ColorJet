@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "alcedo": "tommyZZM/Alcedo",
     "gulp": "^3.8.11"
   }
 }
